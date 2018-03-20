@@ -8,8 +8,12 @@ use App\Http\Requests;
 use App\Repositories\FacebookProfileRepository;
 use App\Repositories\FacebookPostRepository;
 use App\Transformers\FacebookPostTransformer;
+
 use App\Criteria\GetFacebookAnalyticsCriteria;
 use App\Criteria\GetPostsFacebookByProfileIDCriteria;
+use App\Criteria\AnalyticsDistributionOfPagePostTypeCriteria;
+
+use App\InfluxDB\InfluxDB;
 
 
 /**
@@ -28,16 +32,23 @@ class FacebookAnalyticsController extends BaseController
      * @var FacebookProfileRepository
      */
     protected $facebookPostRepository;
-    
+
+    /**
+     * @var InfluxDB
+     */
+    protected $influxDB;
     /**
      * FacebookProfilesController constructor.
      *
      * @param FacebookProfileRepository $repository
      */
-    public function __construct(FacebookProfileRepository $facebookProfileRepository, FacebookPostRepository $facebookPostRepository)
+    public function __construct(FacebookProfileRepository $facebookProfileRepository, 
+    FacebookPostRepository $facebookPostRepository,
+    influxDB $influxDB)
     {
         $this->facebookProfileRepository = $facebookProfileRepository;
         $this->facebookPostRepository = $facebookPostRepository;
+        $this->influxDB = $influxDB;
     }
 
     /**
@@ -55,7 +66,12 @@ class FacebookAnalyticsController extends BaseController
             return $this->response()->errorInternal();
         }
     }
-
+    /**
+     * get facebook analytics by profile id
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response 
+     */
     public function getFacebookAnalyticsByProfileID(Request $request)
     {
         try {
@@ -66,5 +82,59 @@ class FacebookAnalyticsController extends BaseController
         } catch (\Exception $e) {
             return $this->response()->errorInternal();
         }
+    }
+    /**
+     * get Profile Fan from Influx Database split with day
+     * @uses Influx database
+     * @return \Illuminate\Http\Response
+     */
+    public function analyticsTotalPostsInDaysByProfileID($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = $request->last_days;
+            $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
+            $analyticsDatas = $this->influxDB->analyticsTotalPostInDaysByFacebookID($facebookID, $lastDays);
+            return $this->response()->array($analyticsDatas);
+        } catch (\Exception $ex) {
+            return $this->response()->errorInternal();
+        }
+    }
+    /**
+     * analytics distribution of page post type by profile
+     *
+     * @param [int] $profile_id
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function analyticsDistributionOfPagePostTypeByProfileID($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = $request->last_days;
+            $this->facebookPostRepository->pushCriteria(new AnalyticsDistributionOfPagePostTypeCriteria($profileID));
+            $analyticsDatas = $this->facebookPostRepository->all();
+            return $this->response()->array($analyticsDatas);
+        } catch (\Exception $ex) {
+            return $this->response()->errorInternal();
+        }
+    }
+     /**
+     * influx db debugger
+     * @uses Influx database
+     * @return \Illuminate\Http\Response
+     */
+    public function debug()
+    {
+        // try {
+            // $debugData = $this->influxDB->analyticsDistributionOfPagePostType(1410360992530635, 30);
+            // return $this->response()->array($debugData);
+            
+        // } catch (\Exception $ex) {
+        //     return $this->response()->errorInternal();
+        // }
+        $this->facebookPostRepository->pushCriteria(new AnalyticsDistributionOfPagePostTypeCriteria(1));
+        $debugData = $this->facebookPostRepository->all();
+        return $this->response()->array($debugData);
     }
 }
