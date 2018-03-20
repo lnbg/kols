@@ -141,7 +141,7 @@ class FacebookAnalyticsController extends BaseController
     *
     * @SWG\Get(
     *     path="/facebook-analytics/{profile_id}/post?last_days={last_days}",
-    *     description="analytics total posts in days by profile_id and number of days ago",
+    *     description="analytics total posts in days via profile_id and number of days ago",
     *     operationId="getFacebookAnalyticsByProfileID",
     *     produces={"application/json"},
     *     tags={"facebook analytics"},
@@ -189,7 +189,7 @@ class FacebookAnalyticsController extends BaseController
     *
     * @SWG\Get(
     *     path="/facebook-analytics/{profile_id}/distribution-page-post-types?last_days={last_days}",
-    *     description="analytics distribution of page post type by profile_id and number of days ago",
+    *     description="analytics distribution of page post type via profile_id and number of days ago",
     *     operationId="getFacebookAnalyticsByProfileID",
     *     produces={"application/json"},
     *     tags={"facebook analytics"},
