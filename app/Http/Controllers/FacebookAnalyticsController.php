@@ -20,6 +20,17 @@ use App\InfluxDB\InfluxDB;
  * Class FacebookAnalyticsController.
  *
  * @package namespace App\Http\Controllers;
+ * 
+ * @SWG\Swagger(
+ *     basePath="/v1",
+ *     host="api.kols-ammedia.local",
+ *     schemes={"http"},
+ *     @SWG\Info(
+ *         version="1.0",
+ *         title="Kols API",
+ *         @SWG\Contact(name="Ken"),
+ *     )
+ * )
  */
 class FacebookAnalyticsController extends BaseController
 {
@@ -50,11 +61,27 @@ class FacebookAnalyticsController extends BaseController
         $this->facebookPostRepository = $facebookPostRepository;
         $this->influxDB = $influxDB;
     }
-
+    
     /**
-     * Display a listing of the resource.
+     * Facebook Overview API
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @SWG\Get(
+     *     path="/facebook-analytics",
+     *     description="get facebook data for table overview",
+     *     operationId="getListFacebookAnalytics",
+     *     produces={"application/json"},
+     *     tags={"facebook analytics"},
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Internal Error",
+     *     )
+     * )
      */
     public function getListFacebookAnalytics()
     {
@@ -66,12 +93,35 @@ class FacebookAnalyticsController extends BaseController
             return $this->response()->errorInternal();
         }
     }
+
     /**
-     * get facebook analytics by profile id
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response 
-     */
+    *  Facebook Posts API
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}",
+    *     description="get pagination facebook post via profile id",
+    *     operationId="getFacebookAnalyticsByProfileID",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
     public function getFacebookAnalyticsByProfileID(Request $request)
     {
         try {
@@ -83,11 +133,42 @@ class FacebookAnalyticsController extends BaseController
             return $this->response()->errorInternal();
         }
     }
+
     /**
-     * get Profile Fan from Influx Database split with day
-     * @uses Influx database
-     * @return \Illuminate\Http\Response
-     */
+    *  Content Overview: Number of Page Posts
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/post?last_days={last_days}",
+    *     description="analytics total posts in days by profile_id and number of days ago",
+    *     operationId="getFacebookAnalyticsByProfileID",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
     public function analyticsTotalPostsInDaysByProfileID($profile_id, Request $request)
     {
         try {
@@ -100,13 +181,42 @@ class FacebookAnalyticsController extends BaseController
             return $this->response()->errorInternal();
         }
     }
+    
     /**
-     * analytics distribution of page post type by profile
-     *
-     * @param [int] $profile_id
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
+    *  Distribution of Page Post Types
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/distribution-page-post-types?last_days={last_days}",
+    *     description="analytics distribution of page post type by profile_id and number of days ago",
+    *     operationId="getFacebookAnalyticsByProfileID",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
     public function analyticsDistributionOfPagePostTypeByProfileID($profile_id, Request $request)
     {
         try {

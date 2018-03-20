@@ -1,0 +1,143 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Kols API",
+        "contact": {
+            "name": "Ken"
+        },
+        "version": "1.0"
+    },
+    "host": "api.kols-ammedia.local",
+    "basePath": "/v1",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/facebook-analytics": {
+            "get": {
+                "tags": [
+                    "facebook analytics"
+                ],
+                "summary": "Facebook Overview API",
+                "description": "get facebook data for table overview",
+                "operationId": "getListFacebookAnalytics",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/facebook-analytics/{profile_id}": {
+            "get": {
+                "tags": [
+                    "facebook analytics"
+                ],
+                "summary": "Facebook Posts API",
+                "description": "get pagination facebook post via profile id",
+                "operationId": "getFacebookAnalyticsByProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/facebook-analytics/{profile_id}/post?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "facebook analytics"
+                ],
+                "summary": "Content Overview: Number of Page Posts",
+                "description": "analytics total posts in days by profile_id and number of days ago",
+                "operationId": "getFacebookAnalyticsByProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/facebook-analytics/{profile_id}/distribution-page-post-types?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "facebook analytics"
+                ],
+                "summary": "Distribution of Page Post Types",
+                "description": "analytics distribution of page post type by profile_id and number of days ago",
+                "operationId": "getFacebookAnalyticsByProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {}
+}

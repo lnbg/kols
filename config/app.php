@@ -163,6 +163,7 @@ return [
         // Prettus Laravel Pattern
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
         Dingo\Api\Provider\LaravelServiceProvider::class,
+        L5Swagger\L5SwaggerServiceProvider::class,
     ],
 
     /*
