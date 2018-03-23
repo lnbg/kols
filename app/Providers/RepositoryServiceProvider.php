@@ -25,6 +25,8 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(\App\Repositories\FacebookProfileRepository::class, \App\Repositories\FacebookProfileRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\FacebookPostRepository::class, \App\Repositories\FacebookPostRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\YoutubeChannelRepository::class, \App\Repositories\YoutubeChannelRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\YoutubeVideoRepository::class, \App\Repositories\YoutubeVideoRepositoryEloquent::class);
         //:end-bindings:
     }
 }

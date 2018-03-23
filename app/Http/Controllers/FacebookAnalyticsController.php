@@ -13,10 +13,10 @@ use App\Transformers\FacebookProfileTransformer;
 use App\Transformers\FacebookAnalyticsOverviewTransformer;
 use App\Transformers\FacebookPostTransformer;
 
-use App\Criteria\GetFacebookAnalyticsCriteria;
-use App\Criteria\GetFacebookProfileByIDCriteria;
-use App\Criteria\GetFacebookMostEngagingPostsByProfileIDCriteria;
-use App\Criteria\GetFacebookDistributionOfPagePostTypeCriteria;
+use App\Criteria\Facebook\GetFacebookAnalyticsCriteria;
+use App\Criteria\Facebook\GetFacebookProfileByIDCriteria;
+use App\Criteria\Facebook\GetFacebookMostEngagingPostsByProfileIDCriteria;
+use App\Criteria\Facebook\GetFacebookDistributionOfPagePostTypeCriteria;
 
 use App\InfluxDB\InfluxDB;
 

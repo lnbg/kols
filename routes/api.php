@@ -26,11 +26,17 @@ $api->version('v1', function ($api) {
      */
     $api->get('debug', 'App\Http\Controllers\FacebookAnalyticsController@debug');
     
+    /** facebook analytics */
     $api->get('facebook-analytics', 'App\Http\Controllers\FacebookAnalyticsController@getListFacebookAnalytics');
     $api->get('facebook-analytics/{profile_id}', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookAnalyticsByProfileID');
-    
     $api->get('facebook-analytics/{profile_id}/analytics-posts-per-days', 'App\Http\Controllers\FacebookAnalyticsController@analyticsTotalPostsInDaysByProfileID');
     $api->get('facebook-analytics/{profile_id}/growth-total-fans', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookGrowthOfTotalFan');
     $api->get('facebook-analytics/{profile_id}/distribution-page-post-types', 'App\Http\Controllers\FacebookAnalyticsController@analyticsDistributionOfPagePostTypeByProfileID');
     $api->get('facebook-analytics/{profile_id}/most-engaging-posts', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookMostEngagingPostsByProfileID');
+
+    /**
+     * youtube analytics
+     */
+    $api->get('youtube-analytics/channels', 'App\Http\Controllers\YoutubeAnalyticsController@getListYoutubeChannels');
+    
 });
