@@ -230,7 +230,7 @@ class FacebookAnalyticsController extends BaseController
             $lastDays = isset($request->last_days) ? $request->last_days : 30;
             $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
             $analyticsDatas = $this->influxDB->getGrowthOfTotalFan($facebookID, $lastDays);
-            return $this->response()->array($analyticsDatas);
+            return $this->response()->array(['data' => $analyticsDatas]);
         } catch (\Exception $ex) {
             return $ex;
             //return $this->response()->errorInternal();
@@ -279,7 +279,7 @@ class FacebookAnalyticsController extends BaseController
             $lastDays = $request->last_days;
             $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
             $analyticsDatas = $this->influxDB->analyticsTotalPostInDaysByFacebookID($facebookID, $lastDays);
-            return $this->response()->array($analyticsDatas);
+            return $this->response()->array(['data' => $analyticsDatas]);
         } catch (\Exception $ex) {
             return $this->response()->errorInternal();
         }
@@ -326,8 +326,8 @@ class FacebookAnalyticsController extends BaseController
             $profileID = $profile_id;
             $lastDays = $request->last_days;
             $this->facebookPostRepository->pushCriteria(new GetFacebookDistributionOfPagePostTypeCriteria($profileID));
-            $analyticsDatas = $this->facebookPostRepository->all();
-            return $this->response()->array($analyticsDatas);
+            $analyticsDatas = $this->facebookPostRepository->get();
+            return $this->response()->array(['data' => $analyticsDatas]);
         } catch (\Exception $ex) {
             return $this->response()->errorInternal();
         }
@@ -348,6 +348,6 @@ class FacebookAnalyticsController extends BaseController
         // }
         $this->facebookPostRepository->pushCriteria(new GetFacebookDistributionOfPagePostTypeCriteria(1));
         $debugData = $this->facebookPostRepository->all();
-        return $this->response()->array($debugData);
+        return $this->response()->array(['data' => $debugData]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Criteria;
+namespace App\Criteria\Facebook;
 
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;

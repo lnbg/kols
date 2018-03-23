@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Criteria;
+namespace App\Criteria\Facebook;
 
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
@@ -34,9 +34,7 @@ class GetFacebookDistributionOfPagePostTypeCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        $model = $model->where('profile_id', $this->profileID)->select(\DB::raw('facebook_posts.type, sum(id) as count'))
-        ->groupBy('facebook_posts.type')
-        ->get();
-        return $model;
+        return $model->where('profile_id', $this->profileID)->select(\DB::raw('facebook_posts.type, sum(id) as count'))
+        ->groupBy('facebook_posts.type');
     }
 }
