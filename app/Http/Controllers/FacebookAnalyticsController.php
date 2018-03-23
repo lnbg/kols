@@ -243,7 +243,7 @@ class FacebookAnalyticsController extends BaseController
     * @return \Illuminate\Http\JsonResponse
     *
     * @SWG\Get(
-    *     path="/facebook-analytics/{profile_id}/posts?last_days={last_days}",
+    *     path="/facebook-analytics/{profile_id}/analytics-posts-per-days?last_days={last_days}",
     *     description="analytics total posts in days via profile_id and number of days ago",
     *     operationId="getFacebookAnalyticsByProfileID",
     *     produces={"application/json"},
