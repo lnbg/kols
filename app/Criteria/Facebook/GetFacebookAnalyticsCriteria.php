@@ -22,7 +22,7 @@ class GetFacebookAnalyticsCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        $model = $model->join('facebook_posts', 'facebook_profiles.id', 'facebook_posts.profile_id')
+        $model = $model->leftJoin('facebook_posts', 'facebook_profiles.id', 'facebook_posts.profile_id')
         ->select(\DB::raw('facebook_profiles.id, facebook_profiles.facebook_id, facebook_profiles.type,
         facebook_profiles.name, facebook_profiles.username, facebook_profiles.fan_count, facebook_profiles.picture,
         sum(like_count) AS sum_like_count, 
@@ -34,7 +34,7 @@ class GetFacebookAnalyticsCriteria implements CriteriaInterface
         sum(share_count) as sum_share_count, 
         sum(thankful_count) as sum_thankyou_count, 
         sum(comment_count) as sum_comment_count'))
-        ->groupBy('profile_id');
+        ->groupBy('facebook_profiles.id');
         return $model;
     }
 }
