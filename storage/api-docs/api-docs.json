@@ -39,8 +39,8 @@
                 "tags": [
                     "facebook analytics"
                 ],
-                "summary": "Facebook Posts API",
-                "description": "get pagination facebook post via profile id",
+                "summary": "The Detail of Page/Profile",
+                "description": "get detail of facebook profile via profile id",
                 "operationId": "getFacebookAnalyticsByProfileID",
                 "produces": [
                     "application/json"
@@ -64,13 +64,87 @@
                 }
             }
         },
-        "/facebook-analytics/{profile_id}/post?last_days={last_days}": {
+        "/facebook-analytics/{profile_id}/most-engaging-posts?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "facebook analytics"
+                ],
+                "summary": "Most engaging posts via profile id",
+                "description": "get most engaging posts post via profile id",
+                "operationId": "getFacebookMostEngagingPostsByProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/facebook-analytics/{profile_id}/growth_total_fans?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "facebook analytics"
+                ],
+                "summary": "Fan overview: Growth of total fans",
+                "description": "analytics growth of total fans in days via profile_id and number of days ago",
+                "operationId": "getFacebookGrowthOfTotalFan",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/facebook-analytics/{profile_id}/posts?last_days={last_days}": {
             "get": {
                 "tags": [
                     "facebook analytics"
                 ],
                 "summary": "Content Overview: Number of Page Posts",
-                "description": "analytics total posts in days by profile_id and number of days ago",
+                "description": "analytics total posts in days via profile_id and number of days ago",
                 "operationId": "getFacebookAnalyticsByProfileID",
                 "produces": [
                     "application/json"
@@ -107,7 +181,7 @@
                     "facebook analytics"
                 ],
                 "summary": "Distribution of Page Post Types",
-                "description": "analytics distribution of page post type by profile_id and number of days ago",
+                "description": "analytics distribution of page post type via profile_id and number of days ago",
                 "operationId": "getFacebookAnalyticsByProfileID",
                 "produces": [
                     "application/json"

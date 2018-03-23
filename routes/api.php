@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Authorization, X-Request-With, Content-Type, Accept');
+
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
@@ -24,6 +29,8 @@ $api->version('v1', function ($api) {
     $api->get('facebook-analytics', 'App\Http\Controllers\FacebookAnalyticsController@getListFacebookAnalytics');
     $api->get('facebook-analytics/{profile_id}', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookAnalyticsByProfileID');
     
-    $api->get('facebook-analytics/{profile_id}/posts', 'App\Http\Controllers\FacebookAnalyticsController@analyticsTotalPostsInDaysByProfileID');
+    $api->get('facebook-analytics/{profile_id}/analytics-posts-per-days', 'App\Http\Controllers\FacebookAnalyticsController@analyticsTotalPostsInDaysByProfileID');
+    $api->get('facebook-analytics/{profile_id}/growth-total-fans', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookGrowthOfTotalFan');
     $api->get('facebook-analytics/{profile_id}/distribution-page-post-types', 'App\Http\Controllers\FacebookAnalyticsController@analyticsDistributionOfPagePostTypeByProfileID');
+    $api->get('facebook-analytics/{profile_id}/most-engaging-posts', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookMostEngagingPostsByProfileID');
 });

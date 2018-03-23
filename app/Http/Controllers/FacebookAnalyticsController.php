@@ -5,13 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+
 use App\Repositories\FacebookProfileRepository;
 use App\Repositories\FacebookPostRepository;
+
+use App\Transformers\FacebookProfileTransformer;
+use App\Transformers\FacebookAnalyticsOverviewTransformer;
 use App\Transformers\FacebookPostTransformer;
 
 use App\Criteria\GetFacebookAnalyticsCriteria;
-use App\Criteria\GetPostsFacebookByProfileIDCriteria;
-use App\Criteria\AnalyticsDistributionOfPagePostTypeCriteria;
+use App\Criteria\GetFacebookProfileByIDCriteria;
+use App\Criteria\GetFacebookMostEngagingPostsByProfileIDCriteria;
+use App\Criteria\GetFacebookDistributionOfPagePostTypeCriteria;
 
 use App\InfluxDB\InfluxDB;
 
@@ -87,21 +92,21 @@ class FacebookAnalyticsController extends BaseController
     {
         try {
             $this->facebookProfileRepository->pushCriteria(GetFacebookAnalyticsCriteria::class);
-            $facebookAnalytics = $this->facebookProfileRepository->all();
-            return $this->response()->array($facebookAnalytics);
+            $facebookAnalytics = $this->facebookProfileRepository->paginate();
+            return $this->response()->paginator($facebookAnalytics, new FacebookAnalyticsOverviewTransformer);
         } catch (\Execption $e) {
             return $this->response()->errorInternal();
         }
     }
 
     /**
-    *  Facebook Posts API
+    *  The Detail of Page/Profile
     *
     * @return \Illuminate\Http\JsonResponse
     *
     * @SWG\Get(
     *     path="/facebook-analytics/{profile_id}",
-    *     description="get pagination facebook post via profile id",
+    *     description="get detail of facebook profile via profile id",
     *     operationId="getFacebookAnalyticsByProfileID",
     *     produces={"application/json"},
     *     tags={"facebook analytics"},
@@ -122,15 +127,113 @@ class FacebookAnalyticsController extends BaseController
     *     )
     * )
     */
-    public function getFacebookAnalyticsByProfileID(Request $request)
+    public function getFacebookAnalyticsByProfileID($profile_id)
     {
         try {
-            $profileID = $request->profile_id;
-            $this->facebookPostRepository->pushCriteria(new GetPostsFacebookByProfileIDCriteria($profileID));
-            $posts = $this->facebookPostRepository->paginate();
-            return $this->response()->paginator($posts, new FacebookPostTransformer);
+            $profileID = $profile_id;
+            $this->facebookProfileRepository->pushCriteria(new GetFacebookProfileByIDCriteria($profileID));
+            $posts = $this->facebookProfileRepository->first();
+            return $this->response()->item($posts, new FacebookProfileTransformer);
         } catch (\Exception $e) {
             return $this->response()->errorInternal();
+        }
+    }
+
+    /**
+    *  Most engaging posts via profile id
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/most-engaging-posts?last_days={last_days}",
+    *     description="get most engaging posts post via profile id",
+    *     operationId="getFacebookMostEngagingPostsByProfileID",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function getFacebookMostEngagingPostsByProfileID($profile_id, Request $request)
+    {
+        //try {
+            $profileID = $profile_id;
+            $lastDays = isset($request->last_days) ? $request->last_days : 30;
+            $this->facebookPostRepository->pushCriteria(new GetFacebookMostEngagingPostsByProfileIDCriteria($profileID, $lastDays));
+            $posts = $this->facebookPostRepository->get();
+            return $this->response()->collection($posts, new FacebookPostTransformer);
+        // } catch (\Exception $e) {
+        //     return $this->response()->errorInternal();
+        // }
+    }
+
+    
+    /**
+    *  Fan overview: Growth of total fans
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/growth_total_fans?last_days={last_days}",
+    *     description="analytics growth of total fans in days via profile_id and number of days ago",
+    *     operationId="getFacebookGrowthOfTotalFan",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function getFacebookGrowthOfTotalFan($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = isset($request->last_days) ? $request->last_days : 30;
+            $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
+            $analyticsDatas = $this->influxDB->getGrowthOfTotalFan($facebookID, $lastDays);
+            return $this->response()->array($analyticsDatas);
+        } catch (\Exception $ex) {
+            return $ex;
+            //return $this->response()->errorInternal();
         }
     }
 
@@ -222,7 +325,7 @@ class FacebookAnalyticsController extends BaseController
         try {
             $profileID = $profile_id;
             $lastDays = $request->last_days;
-            $this->facebookPostRepository->pushCriteria(new AnalyticsDistributionOfPagePostTypeCriteria($profileID));
+            $this->facebookPostRepository->pushCriteria(new GetFacebookDistributionOfPagePostTypeCriteria($profileID));
             $analyticsDatas = $this->facebookPostRepository->all();
             return $this->response()->array($analyticsDatas);
         } catch (\Exception $ex) {
@@ -243,7 +346,7 @@ class FacebookAnalyticsController extends BaseController
         // } catch (\Exception $ex) {
         //     return $this->response()->errorInternal();
         // }
-        $this->facebookPostRepository->pushCriteria(new AnalyticsDistributionOfPagePostTypeCriteria(1));
+        $this->facebookPostRepository->pushCriteria(new GetFacebookDistributionOfPagePostTypeCriteria(1));
         $debugData = $this->facebookPostRepository->all();
         return $this->response()->array($debugData);
     }

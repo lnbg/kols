@@ -29,6 +29,24 @@ class InfluxDB {
     }
 
     /**
+     * get all record for grouth of total fan via profile id and last day
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
+    public function getGrowthOfTotalFan($profileID, $lastDays)
+    {
+         // executing a query will yield a resultset object
+         $profileID = 1410360992530635;
+         $query = "SELECT last(value) FROM facebook_profile_fan WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d) ORDER BY time DESC";
+         $result = $this->database->query($query);
+         // get the points from the resultset yields an array
+         $points = $result->getPoints();
+         return $points;
+    }
+
+    /**
      * count total posts in days with profile id
      * @param int $profileID
      * @return json

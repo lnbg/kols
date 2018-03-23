@@ -6,11 +6,11 @@ use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class AnalyticsDistributionOfPagePostTypeCriteria.
+ * Class GetFacebookProfileByIDCriteria.
  *
  * @package namespace App\Criteria;
  */
-class AnalyticsDistributionOfPagePostTypeCriteria implements CriteriaInterface
+class GetFacebookProfileByIDCriteria implements CriteriaInterface
 {
     /**
      * Profile ID
@@ -18,12 +18,11 @@ class AnalyticsDistributionOfPagePostTypeCriteria implements CriteriaInterface
      * @var [int]
      */
     private $profileID;
-    
+
     public function __construct($profileID)
     {
         $this->profileID = $profileID;
     }
-    
     /**
      * Apply criteria in query repository
      *
@@ -34,9 +33,6 @@ class AnalyticsDistributionOfPagePostTypeCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        $model = $model->where('profile_id', $this->profileID)->select(\DB::raw('facebook_posts.type, sum(id) as count'))
-        ->groupBy('facebook_posts.type')
-        ->get();
-        return $model;
+        return $model->where('id', $this->profileID);
     }
 }
