@@ -38,8 +38,7 @@ class InfluxDB {
     public function getGrowthOfTotalFan($profileID, $lastDays)
     {
          // executing a query will yield a resultset object
-         $profileID = 1410360992530635;
-         $query = "SELECT last(value) FROM facebook_profile_fan WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d) ORDER BY time DESC";
+         $query = "SELECT last(value) FROM facebook_profile_fan WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
          $result = $this->database->query($query);
          // get the points from the resultset yields an array
          $points = $result->getPoints();
@@ -51,20 +50,20 @@ class InfluxDB {
      * @param int $profileID
      * @return json
      */
-    public function analyticsTotalPostInDaysByFacebookID($facebookID, $lastDays)
+    public function analyticsTotalPostInDaysByFacebookID($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
-        $query = "SELECT SUM(value) FROM facebook_profile_post WHERE profile_id = '" . $facebookID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d) ORDER BY time DESC";
+        $query = "SELECT SUM(value) FROM facebook_profile_post WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();
         return $points;
     }
 
-    public function analyticsDistributionOfPagePostType($facebookID, $lastDays)
+    public function analyticsDistributionOfPagePostType($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
-        $query = "SELECT post_type, SUM(value) FROM facebook_profile_post WHERE profile_id = '" . $facebookID . "' and time > now() - " . $lastDays . "d GROUP BY post_type";
+        $query = "SELECT post_type, SUM(value) FROM facebook_profile_post WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY post_type";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();

@@ -194,7 +194,7 @@ class FacebookAnalyticsController extends BaseController
     * @return \Illuminate\Http\JsonResponse
     *
     * @SWG\Get(
-    *     path="/facebook-analytics/{profile_id}/growth_total_fans?last_days={last_days}",
+    *     path="/facebook-analytics/{profile_id}/growth-total-fans?last_days={last_days}",
     *     description="analytics growth of total fans in days via profile_id and number of days ago",
     *     operationId="getFacebookGrowthOfTotalFan",
     *     produces={"application/json"},
