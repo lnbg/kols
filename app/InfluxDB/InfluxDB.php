@@ -1,6 +1,7 @@
 <?php
 namespace App\InfluxDB;
 
+use DateTime;
 use InfluxDB\Client as InfluxDBClient;
 
 class InfluxDB {
@@ -38,11 +39,49 @@ class InfluxDB {
     public function getGrowthOfTotalFan($profileID, $lastDays)
     {
          // executing a query will yield a resultset object
-         $query = "SELECT last(value) FROM facebook_profile_fan WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
-         $result = $this->database->query($query);
+        $query = "SELECT last(value) FROM facebook_profile_fan WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
+        $result = $this->database->query($query);
          // get the points from the resultset yields an array
-         $points = $result->getPoints();
-         return $points;
+        $points = $result->getPoints();
+        $currentPoint = 0;
+        $oldPoint = 0;
+        $results = [];
+        $minFans = 0;
+        $maxFans = 0;
+        $maxChangeFans = 0;
+        $totalChangeFans = 0;
+        foreach ($points as $point) {
+            if (isset($point['last'])) {
+                if ($currentPoint == 0 && $oldPoint == 0) 
+                {
+                    $currentPoint = $oldPoint = $point['last'];
+                    $minFans = $point['last'];
+                } else {
+                    $currentPoint = $point['last'];
+                    $maxFans = $point['last'];
+                }
+            }
+            $growthValue = $currentPoint - $oldPoint;
+            if ($growthValue > $maxChangeFans) {
+                $maxChangeFans = $growthValue;
+            }
+            $totalChangeFans += $growthValue;
+            $oldPoint = $currentPoint;
+            $date = new DateTime($point['time']);
+            $item = [
+                'time' =>  $date->format('Y-m-d'),
+                'value' => $growthValue
+            ];
+            $results[] = $item;
+        }
+        
+        return [
+            'max_change_fans' => $maxChangeFans,
+            'total_change_fans' => $totalChangeFans,
+            'max_fans' => $maxFans,
+            'min_fans' => $minFans,
+            'data' => $results
+        ];
     }
 
     /**
