@@ -14,7 +14,7 @@ use App\Transformers\InstagramMediaTransformer;
 use App\Transformers\InstagramProfileTransformer;
 use App\Transformers\InstagramOverviewTransformer;
 
-use App\Criteria\Instagram\getAllInstagramProfilesCriteria;
+use App\Criteria\Instagram\GetAllInstagramProfilesCriteria;
 use App\Criteria\Instagram\GetInstagramProfileByProfileIDCriteria;
 use App\Criteria\Instagram\GetDistributionOfProfilePostTypeCriteria;
 use App\Criteria\Instagram\GetInstagramMostEngagingPostsByProfileIDCriteria;
