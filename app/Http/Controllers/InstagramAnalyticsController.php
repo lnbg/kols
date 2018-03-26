@@ -47,6 +47,6 @@ class InstagramAnalyticsController extends BaseController
     public function getListInstagramProfiles()
     {
         $result = $this->instagramHelper->getInfoInfluencerByCrawler();
-        return \Response::json($result, 200);
+        return \Response::json(['data' => $result], 200);
     }
 }
