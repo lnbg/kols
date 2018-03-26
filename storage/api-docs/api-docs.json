@@ -101,7 +101,7 @@
                 }
             }
         },
-        "/facebook-analytics/{profile_id}/growth_total_fans?last_days={last_days}": {
+        "/facebook-analytics/{profile_id}/growth-total-fans?last_days={last_days}": {
             "get": {
                 "tags": [
                     "facebook analytics"
@@ -138,7 +138,7 @@
                 }
             }
         },
-        "/facebook-analytics/{profile_id}/posts?last_days={last_days}": {
+        "/facebook-analytics/{profile_id}/analytics-posts-per-days?last_days={last_days}": {
             "get": {
                 "tags": [
                     "facebook analytics"
@@ -201,6 +201,48 @@
                         "required": true,
                         "type": "integer"
                     }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/instagram-analytics/profiles": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "Instagram Overview: List Instagram Profiles",
+                "description": "get list instagram profiles",
+                "operationId": "getListInstagramProfiles",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/youtube-analytics/channels": {
+            "get": {
+                "tags": [
+                    "youtube analytics"
+                ],
+                "summary": "Youtube Overview: List Youtube channels",
+                "description": "get list youtube channels",
+                "operationId": "getListYoutubeChannels",
+                "produces": [
+                    "application/json"
                 ],
                 "responses": {
                     "200": {

@@ -35,6 +35,11 @@ $api->version('v1', function ($api) {
     $api->get('facebook-analytics/{profile_id}/most-engaging-posts', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookMostEngagingPostsByProfileID');
 
     /**
+     * instagram analytics
+     */
+    $api->get('instagram-analytics/profiles', 'App\Http\Controllers\InstagramAnalyticsController@getListInstagramProfiles');
+
+    /**
      * youtube analytics
      */
     $api->get('youtube-analytics/channels', 'App\Http\Controllers\YoutubeAnalyticsController@getListYoutubeChannels');

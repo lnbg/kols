@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "66e36865e0fa696a6c1074a8677dd343",
+    "content-hash": "769394d2251ef03eb88aba711ef577e4",
     "packages": [
         {
             "name": "darkaonline/l5-swagger",
@@ -2139,6 +2139,55 @@
                 "uuid"
             ],
             "time": "2018-01-20T00:28:24+00:00"
+        },
+        {
+            "name": "smochin/instagram-php-crawler",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smochin/instagram-php-crawler.git",
+                "reference": "19fc12bc6162a9212a241c54973552cdbcef3de9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/smochin/instagram-php-crawler/zipball/19fc12bc6162a9212a241c54973552cdbcef3de9",
+                "reference": "19fc12bc6162a9212a241c54973552cdbcef3de9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^6.2",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Smochin\\Instagram\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jamerson Silva",
+                    "email": "jamersonweb@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple PHP Crawler for Instagram",
+            "homepage": "https://github.com/smochin/instagram-php-crawler",
+            "keywords": [
+                "crawler",
+                "http",
+                "instagram",
+                "php"
+            ],
+            "time": "2018-03-14T18:34:30+00:00"
         },
         {
             "name": "swagger-api/swagger-ui",
