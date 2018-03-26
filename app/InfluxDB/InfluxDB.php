@@ -23,7 +23,7 @@ class InfluxDB {
     public function getAllProfileFan($profileID)
     {
         // executing a query will yield a resultset object
-        $result = $this->database->query("SELECT * FROM facebook_profile_fan WHERE profile_id = '" . $profileID . "'");
+        $result = $this->database->query("SELECT * FROM facebook_profile_fans WHERE profile_id = '" . $profileID . "'");
         // get the points from the resultset yields an array
         $points = $result->getPoints();
         return $points;
@@ -39,7 +39,7 @@ class InfluxDB {
     public function getGrowthOfTotalFan($profileID, $lastDays)
     {
          // executing a query will yield a resultset object
-        $query = "SELECT last(value) FROM facebook_profile_fan WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
+        $query = "SELECT last(value) FROM facebook_profile_fans WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
         $result = $this->database->query($query);
          // get the points from the resultset yields an array
         $points = $result->getPoints();
@@ -92,7 +92,7 @@ class InfluxDB {
     public function analyticsTotalPostInDaysByFacebookID($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
-        $query = "SELECT SUM(value) FROM facebook_profile_post WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
+        $query = "SELECT SUM(value) FROM facebook_profile_new_posts WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();
@@ -102,10 +102,20 @@ class InfluxDB {
     public function analyticsDistributionOfPagePostType($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
-        $query = "SELECT post_type, SUM(value) FROM facebook_profile_post WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY post_type";
+        $query = "SELECT post_type, SUM(value) FROM facebook_profile_new_posts WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY post_type";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();
         return $points;
     } 
+
+    public function analyticsNumberOfFanPosts($profileID, $lastDays)
+    {
+        // executing a query will yield a resultset object
+        $query = "SELECT SUM(value) FROM facebook_profile_new_fan_posts WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
+        $result = $this->database->query($query);
+        // get the points from the resultset yields an array
+        $points = $result->getPoints();
+        return $points;
+    }
 }

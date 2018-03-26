@@ -212,6 +212,43 @@
                 }
             }
         },
+        "/facebook-analytics/{profile_id}/number-of-fan-posts?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "facebook analytics"
+                ],
+                "summary": "Number of fan post",
+                "description": "analytics number of fan posts via profile_id and number of days ago",
+                "operationId": "analyticsNumberOfFanPost",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
         "/instagram-analytics/profiles": {
             "get": {
                 "tags": [
@@ -222,6 +259,36 @@
                 "operationId": "getListInstagramProfiles",
                 "produces": [
                     "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/instagram-analytics/{username}/media": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "Instagram Overview: List Media Instagram",
+                "description": "get all media via username",
+                "operationId": "getInstagramMediaViaUsername",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "instagram username",
+                        "required": true,
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {

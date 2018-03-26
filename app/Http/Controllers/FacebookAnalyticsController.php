@@ -166,15 +166,15 @@ class FacebookAnalyticsController extends BaseController
     */
     public function getFacebookMostEngagingPostsByProfileID($profile_id, Request $request)
     {
-        //try {
+        try {
             $profileID = $profile_id;
             $lastDays = isset($request->last_days) ? $request->last_days : 30;
             $this->facebookPostRepository->pushCriteria(new GetFacebookMostEngagingPostsByProfileIDCriteria($profileID, $lastDays));
             $posts = $this->facebookPostRepository->get();
             return $this->response()->collection($posts, new FacebookPostTransformer);
-        // } catch (\Exception $e) {
-        //     return $this->response()->errorInternal();
-        // }
+        } catch (\Exception $e) {
+            return $this->response()->errorInternal();
+        }
     }
 
     
@@ -222,8 +222,7 @@ class FacebookAnalyticsController extends BaseController
             $analyticsDatas = $this->influxDB->getGrowthOfTotalFan($facebookID, $lastDays);
             return $this->response()->array(['data' => $analyticsDatas]);
         } catch (\Exception $ex) {
-            return $ex;
-            //return $this->response()->errorInternal();
+            return $this->response()->errorInternal();
         }
     }
 
@@ -317,6 +316,54 @@ class FacebookAnalyticsController extends BaseController
             $lastDays = $request->last_days;
             $this->facebookPostRepository->pushCriteria(new GetFacebookDistributionOfPagePostTypeCriteria($profileID));
             $analyticsDatas = $this->facebookPostRepository->get();
+            return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $this->response()->errorInternal();
+        }
+    }
+
+    /**
+    *  Number of fan post
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/number-of-fan-posts?last_days={last_days}",
+    *     description="analytics number of fan posts via profile_id and number of days ago",
+    *     operationId="analyticsNumberOfFanPost",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsNumberOfFanPost($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = $request->last_days;
+            $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
+            $analyticsDatas = $this->influxDB->analyticsNumberOfFanPosts($facebookID, $lastDays);
             return $this->response()->array(['data' => $analyticsDatas]);
         } catch (\Exception $ex) {
             return $this->response()->errorInternal();
