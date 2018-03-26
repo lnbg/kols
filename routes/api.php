@@ -38,8 +38,12 @@ $api->version('v1', function ($api) {
     /**
      * instagram analytics
      */
-    $api->get('instagram-analytics/profiles', 'App\Http\Controllers\InstagramAnalyticsController@getListInstagramProfiles');
+    $api->get('instagram-analytics/profiles', 'App\Http\Controllers\InstagramAnalyticsController@getAllInstagramProfiles');
     $api->get('instagram-analytics/{username}/media', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramMediaViaUsername');
+    $api->get('instagram-analytics/{profile_id}/distribution-profile-media-types', 'App\Http\Controllers\InstagramAnalyticsController@analyticsDistributionOfProfileMediaType');
+    $api->get('instagram-analytics/{profile_id}/most-engaging-media', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramMostEngagingMediaByProfileID');
+    $api->get('instagram-analytics/{profile_id}/analytics-media-per-days', 'App\Http\Controllers\InstagramAnalyticsController@analyticsTotalMediaInDaysByInstagramProfileID');
+    
     /**
      * youtube analytics
      */

@@ -99,6 +99,13 @@ class InfluxDB {
         return $points;
     }
 
+    /**
+     * analytics distribution of facebook page posts type
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
     public function analyticsDistributionOfPagePostType($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
@@ -109,6 +116,13 @@ class InfluxDB {
         return $points;
     } 
 
+    /**
+     * analytics number of facebook fan posts
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
     public function analyticsNumberOfFanPosts($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
@@ -118,4 +132,21 @@ class InfluxDB {
         $points = $result->getPoints();
         return $points;
     }
+
+
+    /**
+     * count total media in days with instagram profile id
+     * @param int $profileID
+     * @return json
+     */
+    public function analyticsTotalMediaInDaysByInstagramID($profileID, $lastDays)
+    {
+        // executing a query will yield a resultset object
+        $query = "SELECT * FROM instagram_profile_media WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d";
+        $result = $this->database->query($query);
+        // get the points from the resultset yields an array
+        $points = $result->getPoints();
+        return $points;
+    }
+    
 }

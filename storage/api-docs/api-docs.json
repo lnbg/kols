@@ -270,6 +270,73 @@
                 }
             }
         },
+        "/instagram-analytics/{profile_id}": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "The Detail of Instagram Profile",
+                "description": "get detail of instagram profile via profile id",
+                "operationId": "getInstagramProfileAnalyticsByProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/instagram-analytics/{profile_id}/most-engaging-posts?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "Most engaging posts via profile id",
+                "description": "get most engaging posts via profile id",
+                "operationId": "getInstagramMostEngagingPostsByProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
         "/instagram-analytics/{username}/media": {
             "get": {
                 "tags": [
@@ -288,6 +355,80 @@
                         "description": "instagram username",
                         "required": true,
                         "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/instagram-analytics/{profile_id}/distribution-profile-post-types?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "Distribution of Instagram Profile Post Types",
+                "description": "analytics distribution of profile post type via profile_id and number of days ago",
+                "operationId": "analyticsDistributionOfProfilePostType",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/instagram-analytics/{profile_id}/analytics-media-per-days?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "Content Overview: Number of Instagram media",
+                "description": "analytics total media in days via profile_id and number of days ago",
+                "operationId": "analyticsTotalMediaInDaysByInstagramProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {

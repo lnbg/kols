@@ -7,6 +7,20 @@ use App\Http\Requests;
 
 use App\Instagrams\InstagramHelper;
 
+use App\Repositories\InstagramMediaRepository;
+use App\Repositories\InstagramProfileRepository;
+
+use App\Transformers\InstagramMediaTransformer;
+use App\Transformers\InstagramProfileTransformer;
+use App\Transformers\InstagramOverviewTransformer;
+
+use App\Criteria\Instagram\getAllInstagramProfilesCriteria;
+use App\Criteria\Instagram\GetInstagramProfileByProfileIDCriteria;
+use App\Criteria\Instagram\GetDistributionOfProfilePostTypeCriteria;
+use App\Criteria\Instagram\GetInstagramMostEngagingPostsByProfileIDCriteria;
+
+use App\InfluxDB\InfluxDB;
+
 /**
  * Class InstagramAnalyticsController.
  *
@@ -15,12 +29,37 @@ use App\Instagrams\InstagramHelper;
  */
 class InstagramAnalyticsController extends BaseController
 {
-    
+    /**
+     * InstagramHelper
+     *
+     * @var InstagramHelper
+     */
     protected $instagramHelper;
 
-    public function __construct(InstagramHelper $instagramHelper)
+    /**
+     * @var InstagramProfileRepository
+     */
+    protected $instagramProfileRepository;
+
+     /**
+     * @var InstagramMediaRepository
+     */
+    protected $instagramMediaRepository;
+    
+     /**
+     * @var influxDB
+     */
+    protected $influxDB;
+
+    public function __construct(InstagramHelper $instagramHelper, 
+    InstagramMediaRepository $instagramMediaRepository,
+    InstagramProfileRepository $instagramProfileRepository,
+    influxDB $influxDB)
     {
         $this->instagramHelper = $instagramHelper;
+        $this->instagramProfileRepository = $instagramProfileRepository;
+        $this->instagramMediaRepository = $instagramMediaRepository;
+        $this->influxDB = $influxDB;
     }
 
     /**
@@ -44,10 +83,104 @@ class InstagramAnalyticsController extends BaseController
      *     )
      * )
      */
-    public function getListInstagramProfiles()
+    public function getAllInstagramProfiles() 
     {
-        $result = $this->instagramHelper->getInfoInfluencerByCrawler();
-        return \Response::json(['data' => $result], 200);
+        try {
+            $this->instagramProfileRepository->pushCriteria(getAllInstagramProfilesCriteria::class);
+            $instagramAnalytics = $this->instagramProfileRepository->paginate();
+            return $this->response()->paginator($instagramAnalytics, new InstagramOverviewTransformer);
+        } catch (\Exception $ex) {
+            return $this->response()->errorInternal();
+        }
+    }
+
+    /**
+    *  The Detail of Instagram Profile
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}",
+    *     description="get detail of instagram profile via profile id",
+    *     operationId="getInstagramProfileAnalyticsByProfileID",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function getInstagramProfileAnalyticsByProfileID($profile_id)
+    {
+        try {
+            $profileID = $profile_id;
+            $this->instagramProfileRepository->pushCriteria(new GetInstagramProfileByProfileIDCriteria($profileID));
+            $posts = $this->instagramProfileRepository->first();
+            return $this->response()->item($posts, new InstagramProfileTransformer);
+        } catch (\Exception $e) {
+            return $this->response()->errorInternal();
+        }
+    }
+
+    /**
+    *  Most engaging posts via profile id
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}/most-engaging-media?last_days={last_days}",
+    *     description="get most engaging posts via profile id",
+    *     operationId="getInstagramMostEngagingMediaByProfileID",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function getInstagramMostEngagingMediaByProfileID($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = isset($request->last_days) ? $request->last_days : 30;
+            $this->instagramMediaRepository->pushCriteria(new GetInstagramMostEngagingPostsByProfileIDCriteria($profileID, $lastDays));
+            $posts = $this->instagramMediaRepository->get();
+            return $this->response()->collection($posts, new InstagramMediaTransformer);
+        } catch (\Exception $e) {
+            return $e;
+            // return $this->response()->errorInternal();
+        }
     }
 
     /**
@@ -82,5 +215,103 @@ class InstagramAnalyticsController extends BaseController
     {
         $result = $this->instagramHelper->getPostsOfInstagramByUserName($username);
         return \Response::json(['data' => $result], 200);
+    }
+
+
+    /**
+    *  Distribution of Instagram Profile Media Types
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}/distribution-profile-media-types?last_days={last_days}",
+    *     description="analytics distribution of profile media type via profile_id and number of days ago",
+    *     operationId="analyticsDistributionOfProfileMediaType",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsDistributionOfProfileMediaType($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = $request->last_days;
+            $this->instagramMediaRepository->pushCriteria(new GetDistributionOfProfilePostTypeCriteria($profileID));
+            $analyticsDatas = $this->instagramMediaRepository->get();
+            return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $ex;
+            // return $this->response()->errorInternal();
+        }
+    }
+
+    /**
+    *  Content Overview: Number of Instagram media
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}/analytics-media-per-days?last_days={last_days}",
+    *     description="analytics total media in days via profile_id and number of days ago",
+    *     operationId="analyticsTotalMediaInDaysByInstagramProfileID",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsTotalMediaInDaysByInstagramProfileID($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = $request->last_days;
+            $instagramID = $this->instagramProfileRepository->find($profileID)->instagram_id;
+            $analyticsDatas = $this->influxDB->analyticsTotalMediaInDaysByInstagramID($instagramID, $lastDays);
+            return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $ex;
+        }
     }
 }
