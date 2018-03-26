@@ -19,4 +19,5 @@ use Illuminate\Routing\Controller;
 class BaseController extends Controller
 {
     use Helpers;
+    //
 }
