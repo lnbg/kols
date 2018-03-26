@@ -66,7 +66,7 @@ class InstagramAnalyticsController extends BaseController
      *       in="path",
      *       description="instagram username",
      *       required=true,
-     *       type="String"
+     *       type="string"
      *     ),
      *     @SWG\Response(
      *         response=200,
