@@ -49,4 +49,27 @@ class InstagramHelper
         }
         return $results;
     }
+
+    public function getPostsOfInstagramByUserName($username)
+    {
+        $allMedia = $this->instagramCrawler->getMediaByUser($username);
+        $data = [];
+        foreach ($allMedia as $media) 
+        {
+            $demension = $media->getDimension();
+            $item = [
+                'id' => $media->getId(),
+                'caption' => $media->getCaption(),
+                'url' => $media->getUrl(),
+                'demension' => [
+                    'w' => $demension->getWidth(),
+                    'h' => $demension->getHeight()
+                ],
+                'likes' => $media->getLikesCount(),
+                'comments' => $media->getCommentsCount(),
+            ];
+            $data[] = $item;
+        }
+        return $data;
+    }
 }

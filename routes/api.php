@@ -38,7 +38,7 @@ $api->version('v1', function ($api) {
      * instagram analytics
      */
     $api->get('instagram-analytics/profiles', 'App\Http\Controllers\InstagramAnalyticsController@getListInstagramProfiles');
-
+    $api->get('instagram-analytics/{username}/media', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramMediaViaUsername');
     /**
      * youtube analytics
      */
