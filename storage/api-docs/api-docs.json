@@ -300,14 +300,14 @@
                 }
             }
         },
-        "/instagram-analytics/{profile_id}/most-engaging-posts?last_days={last_days}": {
+        "/instagram-analytics/{profile_id}/most-engaging-media?last_days={last_days}": {
             "get": {
                 "tags": [
                     "instagram analytics"
                 ],
                 "summary": "Most engaging posts via profile id",
                 "description": "get most engaging posts via profile id",
-                "operationId": "getInstagramMostEngagingPostsByProfileID",
+                "operationId": "getInstagramMostEngagingMediaByProfileID",
                 "produces": [
                     "application/json"
                 ],
@@ -367,14 +367,14 @@
                 }
             }
         },
-        "/instagram-analytics/{profile_id}/distribution-profile-post-types?last_days={last_days}": {
+        "/instagram-analytics/{profile_id}/distribution-profile-media-types?last_days={last_days}": {
             "get": {
                 "tags": [
                     "instagram analytics"
                 ],
-                "summary": "Distribution of Instagram Profile Post Types",
-                "description": "analytics distribution of profile post type via profile_id and number of days ago",
-                "operationId": "analyticsDistributionOfProfilePostType",
+                "summary": "Distribution of Instagram Profile Media Types",
+                "description": "analytics distribution of profile media type via profile_id and number of days ago",
+                "operationId": "analyticsDistributionOfProfileMediaType",
                 "produces": [
                     "application/json"
                 ],

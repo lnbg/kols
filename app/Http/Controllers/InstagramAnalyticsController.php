@@ -90,7 +90,8 @@ class InstagramAnalyticsController extends BaseController
             $instagramAnalytics = $this->instagramProfileRepository->paginate();
             return $this->response()->paginator($instagramAnalytics, new InstagramOverviewTransformer);
         } catch (\Exception $ex) {
-            return $this->response()->errorInternal();
+            //return $this->response()->errorInternal();
+            return $ex;
         }
     }
 
@@ -130,7 +131,8 @@ class InstagramAnalyticsController extends BaseController
             $posts = $this->instagramProfileRepository->first();
             return $this->response()->item($posts, new InstagramProfileTransformer);
         } catch (\Exception $e) {
-            return $this->response()->errorInternal();
+            //return $this->response()->errorInternal();
+            return $ex;
         }
     }
 
@@ -178,8 +180,8 @@ class InstagramAnalyticsController extends BaseController
             $posts = $this->instagramMediaRepository->get();
             return $this->response()->collection($posts, new InstagramMediaTransformer);
         } catch (\Exception $e) {
-            return $e;
-            // return $this->response()->errorInternal();
+           // return $this->response()->errorInternal();
+            return $ex;
         }
     }
 
@@ -263,7 +265,6 @@ class InstagramAnalyticsController extends BaseController
             return $this->response()->array(['data' => $analyticsDatas]);
         } catch (\Exception $ex) {
             return $ex;
-            // return $this->response()->errorInternal();
         }
     }
 

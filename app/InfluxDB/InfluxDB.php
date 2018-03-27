@@ -39,7 +39,8 @@ class InfluxDB {
     public function getGrowthOfTotalFan($profileID, $lastDays)
     {
          // executing a query will yield a resultset object
-        $query = "SELECT last(value) FROM facebook_profile_fans WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
+        //$query = "SELECT last(value) FROM facebook_profile_fans WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d), deviceId TZ('Asia/Saigon')";
+        $query = "SELECT * FROM facebook_profile_fans WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d";
         $result = $this->database->query($query);
          // get the points from the resultset yields an array
         $points = $result->getPoints();
@@ -51,14 +52,14 @@ class InfluxDB {
         $maxChangeFans = 0;
         $totalChangeFans = 0;
         foreach ($points as $point) {
-            if (isset($point['last'])) {
+            if (isset($point['value'])) {
                 if ($currentPoint == 0 && $oldPoint == 0) 
                 {
-                    $currentPoint = $oldPoint = $point['last'];
-                    $minFans = $point['last'];
+                    $currentPoint = $oldPoint = $point['value'];
+                    $minFans = $point['value'];
                 } else {
-                    $currentPoint = $point['last'];
-                    $maxFans = $point['last'];
+                    $currentPoint = $point['value'];
+                    $maxFans = $point['value'];
                 }
             }
             $growthValue = $currentPoint - $oldPoint;
