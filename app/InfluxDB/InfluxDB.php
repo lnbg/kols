@@ -147,6 +147,8 @@ class InfluxDB {
         $comments = [];
         $shares = [];
         $times = [];
+        $interactions = [];
+        $totalInteractions = 0;
 
         foreach ($series as $seri) {
             $tag = $seri['tags']['interaction_type'];
@@ -162,12 +164,25 @@ class InfluxDB {
                         $reactions[$val[0]] = $val[1];
                     }
                 }
+                if (isset($interactions[$val[0]])) {
+                    $interactions[$val[0]] += $val[1];
+                } else {
+                    $interactions[$val[0]] = $val[1];
+                }
+                $totalInteractions += $val[1];
             }
         }
+        $maxInterctionValue = max($interactions);
+        $keyOfMaxInteraction = array_search($maxInterctionValue, $interactions);
         $results = [
             'comments' => $comments,
             'shares' => $shares,
-            'reactions' => $reactions
+            'reactions' => $reactions,
+            'max_interactions_on' => [
+                'time' => $keyOfMaxInteraction,
+                'value' => $maxInterctionValue
+            ],
+            'average_interactions_per_day' => $totalInteractions / $lastDays
         ];
         return $results;
     }
