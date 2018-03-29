@@ -369,6 +369,54 @@ class FacebookAnalyticsController extends BaseController
             return $this->response()->errorInternal();
         }
     }
+
+    /**
+    *  evolution of interactions
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/evolution-of-interactions?last_days={last_days}",
+    *     description="evolution of interactions via profile_id and number of days ago",
+    *     operationId="analyticsInteractionInDaysByProfileID",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsInteractionInDaysByProfileID($profile_id, Request $request)
+    {
+        // try {
+            $profileID = $profile_id;
+            $lastDays = $request->last_days;
+            $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
+            $analyticsDatas = $this->influxDB->analyticsInteractionInDaysByProfileID($facebookID, $lastDays);
+            return $this->response()->array(['data' => $analyticsDatas]);
+        // } catch (\Exception $ex) {
+        //     return $this->response()->errorInternal();
+        // }
+    }
      /**
      * influx db debugger
      * @uses Influx database

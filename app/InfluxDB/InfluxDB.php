@@ -15,6 +15,8 @@ class InfluxDB {
         $this->database = $this->influxDb->selectDB('analytics');
     }
 
+
+    /******************************** FACEBOOK **********************************/
     /**
      * count total fans in days with profile id
      * @param int $profileID
@@ -134,6 +136,45 @@ class InfluxDB {
         return $points;
     }
 
+    public function analyticsInteractionInDaysByProfileID($profileID, $lastDays)
+    {
+        $query = "SELECT SUM(value) from facebook_post_interactions WHERE profile_id = '" . $profileID . "' GROUP BY interaction_type, time(1d)";
+        $result = $this->database->query($query);
+        // get the points from the resultset yields an array
+        $series = $result->getSeries();
+        $results = [];
+        $reactions = [];
+        $comments = [];
+        $shares = [];
+        $times = [];
+
+        foreach ($series as $seri) {
+            $tag = $seri['tags']['interaction_type'];
+            foreach ($seri['values'] as $val) {
+                if ($tag == 'comment') {
+                    $comments[$val[0]] = $val[1];
+                } else if ($tag == 'share') {
+                    $shares[$val[0]] = $val[1];
+                } else {
+                    if (isset($reactions[$val[0]])) {
+                        $reactions[$val[0]] += $val[1];
+                    } else {
+                        $reactions[$val[0]] = $val[1];
+                    }
+                }
+            }
+        }
+        $results = [
+            'comments' => $comments,
+            'shares' => $shares,
+            'reactions' => $reactions
+        ];
+        return $results;
+    }
+
+
+    /******************************* INSTAGRAM **********************************/
+
 
     /**
      * count total media in days with instagram profile id
@@ -148,6 +189,5 @@ class InfluxDB {
         // get the points from the resultset yields an array
         $points = $result->getPoints();
         return $points;
-    }
-    
+    }    
 }

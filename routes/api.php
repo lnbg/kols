@@ -34,6 +34,7 @@ $api->version('v1', function ($api) {
     $api->get('facebook-analytics/{profile_id}/growth-total-fans', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookGrowthOfTotalFan');
     $api->get('facebook-analytics/{profile_id}/distribution-page-post-types', 'App\Http\Controllers\FacebookAnalyticsController@analyticsDistributionOfPagePostTypeByProfileID');
     $api->get('facebook-analytics/{profile_id}/most-engaging-posts', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookMostEngagingPostsByProfileID');
+    $api->get('facebook-analytics/{profile_id}/evolution-of-interactions', 'App\Http\Controllers\FacebookAnalyticsController@analyticsInteractionInDaysByProfileID');
 
     /**
      * instagram analytics

@@ -47,6 +47,6 @@ class GetFacebookMostEngagingPostsByProfileIDCriteria implements CriteriaInterfa
         sum(like_count + haha_count + wow_count + sad_count + love_count + angry_count +
         thankful_count + comment_count + share_count) as interactions_count'))
         ->groupBy('id')
-        ->orderBy('interactions_count', 'DESC');
+        ->orderBy('interactions_count', 'DESC')->limit(10);
     }
 }
