@@ -29,6 +29,7 @@ class YoutubeVideoTransformer extends TransformerAbstract
             'title'         => (string) $model->title,
             'description'   => (string) $model->description,
             'thumbnail'     => (string) $model->thumbnail,
+            'video_count'   => (int) $model->video_count,
             'view_count'    => (int) $model->view_count,
             'like_count'    => (int) $model->like_count,
             'dislike_count' => (int) $model->dislike_count,

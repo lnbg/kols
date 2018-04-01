@@ -59,9 +59,15 @@ class InfluxDB {
                 {
                     $currentPoint = $oldPoint = $point['value'];
                     $minFans = $point['value'];
+                    $maxFans = $point['value'];
                 } else {
                     $currentPoint = $point['value'];
-                    $maxFans = $point['value'];
+                    if ($point['value'] > $maxFans) {
+                        $maxFans = $point['value'];
+                    }
+                    if ($point['value'] < $minFans) {
+                        $minFans = $point['value'];
+                    }
                 }
             }
             $growthValue = $currentPoint - $oldPoint;
