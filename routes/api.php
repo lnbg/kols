@@ -44,9 +44,14 @@ $api->version('v1', function ($api) {
     $api->get('instagram-analytics/profiles', 'App\Http\Controllers\InstagramAnalyticsController@getAllInstagramProfiles');
     $api->get('instagram-analytics/{profile_id}', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramProfileAnalyticsByProfileID');
     $api->get('instagram-analytics/{username}/media', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramMediaViaUsername');
+    $api->get('instagram-analytics/{profile_id}/growth-total-followers', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramGrowthOfTotalFollowers');
     $api->get('instagram-analytics/{profile_id}/distribution-profile-media-types', 'App\Http\Controllers\InstagramAnalyticsController@analyticsDistributionOfProfileMediaType');
     $api->get('instagram-analytics/{profile_id}/most-engaging-media', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramMostEngagingMediaByProfileID');
     $api->get('instagram-analytics/{profile_id}/analytics-media-per-days', 'App\Http\Controllers\InstagramAnalyticsController@analyticsTotalMediaInDaysByInstagramProfileID');
+    $api->get('instagram-analytics/{profile_id}/evolution-of-interactions', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramInteractionInDaysByProfileID');
+    $api->get('instagram-analytics/{profile_id}/distribution-of-interactions', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramDistributionOfInteraction');
+    $api->get('instagram-analytics/{profile_id}/number-of-interactions-per-1kfollowers', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramInteractionInDayPer1KFollowers');
+    
     
     /**
      * youtube analytics

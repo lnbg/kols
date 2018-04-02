@@ -137,6 +137,54 @@ class InstagramAnalyticsController extends BaseController
     }
 
     /**
+    *  Followers overview: Growth of total followers
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}/growth-total-followers?last_days={last_days}",
+    *     description="analytics growth of total followers in days via profile_id and number of days ago",
+    *     operationId="getInstagramGrowthOfTotalFollowers",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function getInstagramGrowthOfTotalFollowers($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = isset($request->last_days) ? $request->last_days : 30;
+            $instagramID = $this->instagramProfileRepository->find($profileID)->instagram_id;
+            $analyticsDatas = $this->influxDB->getGrowthOfTotalFollowers($instagramID, $lastDays);
+            return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $this->response()->errorInternal();
+        }
+    }
+
+    /**
     *  Most engaging posts via profile id
     *
     * @return \Illuminate\Http\JsonResponse
@@ -310,6 +358,150 @@ class InstagramAnalyticsController extends BaseController
             $lastDays = $request->last_days;
             $instagramID = $this->instagramProfileRepository->find($profileID)->instagram_id;
             $analyticsDatas = $this->influxDB->analyticsTotalMediaInDaysByInstagramID($instagramID, $lastDays);
+            return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $ex;
+        }
+    }
+
+    /**
+    *  evolution of interactions
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}/evolution-of-interactions?last_days={last_days}",
+    *     description="analytics evolution of interactions via profile_id and number of days ago",
+    *     operationId="analyticsInstagramInteractionInDaysByProfileID",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsInstagramInteractionInDaysByProfileID($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = $request->last_days;
+            $instagramID = $this->instagramProfileRepository->find($profileID)->instagram_id;
+            $analyticsDatas = $this->influxDB->analyticsInstagramInteractionInDaysByProfileID($instagramID, $lastDays);
+            return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $ex;
+        }
+    }
+
+    /**
+    *  distribution of interactions
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}/distribution-of-interactions?last_days={last_days}",
+    *     description="analytics distribution of interactions via profile_id and number of days ago",
+    *     operationId="analyticsInstagramDistributionOfInteraction",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsInstagramDistributionOfInteraction($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = $request->last_days;
+            $instagramID = $this->instagramProfileRepository->find($profileID)->instagram_id;
+            $analyticsDatas = $this->influxDB->instagramDistributionOfInteractions($instagramID, $lastDays);
+            return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $ex;
+        }
+    }
+
+    /**
+    *  number of interaction per 1k fans
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}/number-of-interactions-per-1kfollowers?last_days={last_days}",
+    *     description="number of interactions per 1k followers via profile_id and number of days ago",
+    *     operationId="analyticsInstagramInteractionInDayPer1KFollowers",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsInstagramInteractionInDayPer1KFollowers($profile_id, Request $request)
+    {
+        try {
+            $profileID = $profile_id;
+            $lastDays = $request->last_days;
+            $instagramID = $this->instagramProfileRepository->find($profileID)->instagram_id;
+            $analyticsDatas = $this->influxDB->analyticsInstagramInteractionInDayPer1KFollowers($instagramID, $lastDays);
             return $this->response()->array(['data' => $analyticsDatas]);
         } catch (\Exception $ex) {
             return $ex;

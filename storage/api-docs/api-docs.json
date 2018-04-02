@@ -411,6 +411,43 @@
                 }
             }
         },
+        "/instagram-analytics/{profile_id}/growth-total-followers?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "Followers overview: Growth of total followers",
+                "description": "analytics growth of total followers in days via profile_id and number of days ago",
+                "operationId": "getInstagramGrowthOfTotalFollowers",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
         "/instagram-analytics/{profile_id}/most-engaging-media?last_days={last_days}": {
             "get": {
                 "tags": [
@@ -523,6 +560,117 @@
                 "summary": "Content Overview: Number of Instagram media",
                 "description": "analytics total media in days via profile_id and number of days ago",
                 "operationId": "analyticsTotalMediaInDaysByInstagramProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/instagram-analytics/{profile_id}/evolution-of-interactions?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "evolution of interactions",
+                "description": "analytics evolution of interactions via profile_id and number of days ago",
+                "operationId": "analyticsInstagramInteractionInDaysByProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/instagram-analytics/{profile_id}/distribution-of-interactions?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "distribution of interactions",
+                "description": "analytics distribution of interactions via profile_id and number of days ago",
+                "operationId": "analyticsInstagramDistributionOfInteraction",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/instagram-analytics/{profile_id}/number-of-interactions-per-1kfollowers?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "number of interaction per 1k fans",
+                "description": "number of interactions per 1k followers via profile_id and number of days ago",
+                "operationId": "analyticsInstagramInteractionInDayPer1KFollowers",
                 "produces": [
                     "application/json"
                 ],

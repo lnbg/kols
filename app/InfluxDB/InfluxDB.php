@@ -4,6 +4,7 @@ namespace App\InfluxDB;
 use DateTime;
 use InfluxDB\Client as InfluxDBClient;
 use App\Entities\FacebookProfile;
+use App\Entities\InstagramProfile;
 
 class InfluxDB {
 
@@ -197,7 +198,7 @@ class InfluxDB {
     public function analyticsInteractionInDayPer1KFans($profileID, $lastDays)
     {
         $totalFans = FacebookProfile::where('facebook_id', '=', $profileID)->first()->fan_count;
-        $query = "SELECT SUM(value) * 1000 / " . $totalFans . " as value from facebook_post_interactions WHERE profile_id = '" . $profileID . "' GROUP BY time(1d) FILL(none)";
+        $query = "SELECT (SUM(value) * 1000 / " . $totalFans . ") as value from facebook_post_interactions WHERE profile_id = '" . $profileID . "' GROUP BY time(1d) FILL(none)";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();
@@ -258,10 +259,158 @@ class InfluxDB {
     public function analyticsTotalMediaInDaysByInstagramID($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
-        $query = "SELECT * FROM instagram_profile_media WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d";
+        $query = "SELECT last(value) as value FROM instagram_profile_media WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d group by time(1d) fill(none)";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();
         return $points;
-    }    
+    }   
+    
+    /**
+     * get all record for grouth of total fan via profile id and last day
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
+    public function getGrowthOfTotalFollowers($profileID, $lastDays)
+    {
+         // executing a query will yield a resultset object
+        $query = "SELECT last(value) FROM instagram_profile_followers WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d  GROUP BY time(1d) FILL(none)";
+        $result = $this->database->query($query);
+         // get the points from the resultset yields an array
+        $points = $result->getPoints();
+        $currentPoint = 0;
+        $oldPoint = 0;
+        $results = [];
+        $minFans = 0;
+        $maxFans = 0;
+        $maxChangeFans = 0;
+        $totalChangeFans = 0;
+        foreach ($points as $point) {
+            if (isset($point['last'])) {
+                if ($currentPoint == 0 && $oldPoint == 0) 
+                {
+                    $currentPoint = $oldPoint = $point['last'];
+                    $minFans = $point['last'];
+                    $maxFans = $point['last'];
+                } else {
+                    $currentPoint = $point['last'];
+                    if ($point['last'] > $maxFans) {
+                        $maxFans = $point['last'];
+                    }
+                    if ($point['last'] < $minFans) {
+                        $minFans = $point['last'];
+                    }
+                }
+            }
+            $growthValue = $currentPoint - $oldPoint;
+            if ($growthValue > $maxChangeFans) {
+                $maxChangeFans = $growthValue;
+            }
+            $totalChangeFans += $growthValue;
+            $oldPoint = $currentPoint;
+            $date = new DateTime($point['time']);
+            $item = [
+                'time' =>  $date->format('Y-m-d'),
+                'value' => $growthValue
+            ];
+            $results[] = $item;
+        }
+        
+        return [
+            'max_change_fans' => $maxChangeFans,
+            'total_change_fans' => $totalChangeFans,
+            'max_fans' => $maxFans,
+            'min_fans' => $minFans,
+            'data' => $results
+        ];
+    }
+
+    public function analyticsInstagramInteractionInDaysByProfileID($profileID, $lastDays)
+    {
+        $query = "SELECT SUM(value) from instagram_media_interactions WHERE profile_id = '" . $profileID . "' GROUP BY interaction_type, time(1d)";
+        $result = $this->database->query($query);
+        // get the points from the resultset yields an array
+        $series = $result->getSeries();
+        $results = [];
+        $likes = [];
+        $comments = [];
+        $interactions = [];
+        $totalInteractions = 0;
+
+        foreach ($series as $seri) {
+            $tag = $seri['tags']['interaction_type'];
+            foreach ($seri['values'] as $val) {
+                if ($tag == 'like') {
+                    $likes[$val[0]] = $val[1] ?? 0;
+                } else if ($tag == 'comment') {
+                    $comments[$val[0]] = $val[1] ?? 0;
+                }
+                if (isset($interactions[$val[0]])) {
+                    $interactions[$val[0]] += $val[1] ?? 0;
+                } else {
+                    $interactions[$val[0]] = $val[1] ?? 0;
+                }
+                $totalInteractions += $val[1] ?? 0;
+            }
+        }
+        $maxInterctionValue = max($interactions);
+        $keyOfMaxInteraction = array_search($maxInterctionValue, $interactions);
+        $results = [
+            'comments' => $comments,
+            'likes' => $likes,
+            'max_interactions_on' => [
+                'time' => $keyOfMaxInteraction,
+                'value' => $maxInterctionValue
+            ],
+            'average_interactions_per_day' => round($totalInteractions / $lastDays, 2)
+        ];
+        return $results;
+    }
+
+    public function instagramDistributionOfInteractions($profileID, $lastDays)
+    {
+        // executing a query will yield a resultset object
+        $query = "SELECT SUM(value) FROM instagram_media_interactions WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY interaction_type";
+        $result = $this->database->query($query);
+        // get the points from the resultset yields an array
+        $series = $result->getSeries();
+        $comments = 0;
+        $likes = 0;
+        $total = 0;
+        foreach ($series as $seri) {
+            if ($seri['tags']['interaction_type'] == 'comment')
+            {
+                $comments = $seri['values'][0][1];
+            } else if ($seri['tags']['interaction_type'] == 'like')
+            {
+                $likes = $seri['values'][0][1];
+            }
+            $total += $seri['values'][0][1];
+        }
+        return [
+            'comments' => [
+                'value' => $comments,
+                'percentage' => round($comments / $total, 2)
+            ],
+            'likes' => [
+                'value' => $likes,
+                'percentage' => round($likes / $total, 2)
+            ],
+        ];
+    }
+
+    public function analyticsInstagramInteractionInDayPer1KFollowers($profileID, $lastDays)
+    {
+        $totalFollowers = InstagramProfile::where('instagram_id', '=', $profileID)->first()->follower_count;
+        $query = "SELECT (SUM(value) * 1000 / " . $totalFollowers . ") as value from instagram_media_interactions WHERE profile_id = '" . $profileID . "' GROUP BY time(1d) FILL(none)";
+        $result = $this->database->query($query);
+        // get the points from the resultset yields an array
+        $points = $result->getPoints();
+        foreach ($points as &$point) {
+            $point['value'] = round($point['value'], 2);
+        }
+        return $points;
+    }
 }
