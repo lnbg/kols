@@ -286,6 +286,80 @@
                 }
             }
         },
+        "/facebook-analytics/{profile_id}/distribution-of-interactions?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "facebook analytics"
+                ],
+                "summary": "distribution of interaction",
+                "description": "distribution of interactions via profile_id and number of days ago",
+                "operationId": "analyticsDistributionOfInteractions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/facebook-analytics/{profile_id}/number-of-interactions-per-1kfans?last_days={last_days}": {
+            "get": {
+                "tags": [
+                    "facebook analytics"
+                ],
+                "summary": "number of interaction per 1k fans",
+                "description": "number of interactions per 1k fans via profile_id and number of days ago",
+                "operationId": "analyticsInteractionPer1KFans",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "last_days",
+                        "in": "path",
+                        "description": "Number of days ago",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
         "/instagram-analytics/profiles": {
             "get": {
                 "tags": [

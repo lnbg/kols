@@ -417,6 +417,94 @@ class FacebookAnalyticsController extends BaseController
         //     return $this->response()->errorInternal();
         // }
     }
+    
+    /**
+    *  distribution of interaction
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/distribution-of-interactions?last_days={last_days}",
+    *     description="distribution of interactions via profile_id and number of days ago",
+    *     operationId="analyticsDistributionOfInteractions",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsDistributionOfInteractions($profile_id, Request $request)
+    {
+        $profileID = $profile_id;
+        $lastDays = $request->last_days;
+        $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
+        $analyticsDatas = $this->influxDB->distributionOfInteractions($facebookID, $lastDays);
+        return $this->response()->array(['data' => $analyticsDatas]);
+    }
+
+    /**
+    *  number of interaction per 1k fans
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/number-of-interactions-per-1kfans?last_days={last_days}",
+    *     description="number of interactions per 1k fans via profile_id and number of days ago",
+    *     operationId="analyticsInteractionPer1KFans",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsInteractionPer1KFans($profile_id, Request $request)
+    {
+        $profileID = $profile_id;
+        $lastDays = $request->last_days;
+        $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
+        $analyticsDatas = $this->influxDB->analyticsInteractionInDayPer1KFans($facebookID, $lastDays);
+        return $this->response()->array(['data' => $analyticsDatas]);
+    }
      /**
      * influx db debugger
      * @uses Influx database
@@ -435,4 +523,6 @@ class FacebookAnalyticsController extends BaseController
         $debugData = $this->facebookPostRepository->all();
         return $this->response()->array(['data' => $debugData]);
     }
+
+
 }

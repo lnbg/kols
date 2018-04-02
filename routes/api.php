@@ -35,6 +35,8 @@ $api->version('v1', function ($api) {
     $api->get('facebook-analytics/{profile_id}/distribution-page-post-types', 'App\Http\Controllers\FacebookAnalyticsController@analyticsDistributionOfPagePostTypeByProfileID');
     $api->get('facebook-analytics/{profile_id}/most-engaging-posts', 'App\Http\Controllers\FacebookAnalyticsController@getFacebookMostEngagingPostsByProfileID');
     $api->get('facebook-analytics/{profile_id}/evolution-of-interactions', 'App\Http\Controllers\FacebookAnalyticsController@analyticsInteractionInDaysByProfileID');
+    $api->get('facebook-analytics/{profile_id}/distribution-of-interactions', 'App\Http\Controllers\FacebookAnalyticsController@analyticsDistributionOfInteractions');
+    $api->get('facebook-analytics/{profile_id}/number-of-interactions-per-1kfans', 'App\Http\Controllers\FacebookAnalyticsController@analyticsInteractionPer1KFans');
 
     /**
      * instagram analytics

@@ -3,6 +3,7 @@ namespace App\InfluxDB;
 
 use DateTime;
 use InfluxDB\Client as InfluxDBClient;
+use App\Entities\FacebookProfile;
 
 class InfluxDB {
 
@@ -191,6 +192,58 @@ class InfluxDB {
             'average_interactions_per_day' => $totalInteractions / $lastDays
         ];
         return $results;
+    }
+
+    public function analyticsInteractionInDayPer1KFans($profileID, $lastDays)
+    {
+        $totalFans = FacebookProfile::where('facebook_id', '=', $profileID)->first()->fan_count;
+        $query = "SELECT SUM(value) * 1000 / " . $totalFans . " as value from facebook_post_interactions WHERE profile_id = '" . $profileID . "' GROUP BY time(1d) FILL(none)";
+        $result = $this->database->query($query);
+        // get the points from the resultset yields an array
+        $points = $result->getPoints();
+        foreach ($points as &$point) {
+            $point['value'] = round($point['value'], 2);
+        }
+        return $points;
+    }
+
+    public function distributionOfInteractions($profileID, $lastDays)
+    {
+        // executing a query will yield a resultset object
+        $query = "SELECT SUM(value) FROM facebook_post_interactions WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY interaction_type";
+        $result = $this->database->query($query);
+        // get the points from the resultset yields an array
+        $series = $result->getSeries();
+        $reactions = 0;
+        $comments = 0;
+        $shares = 0;
+        $total = 0;
+        foreach ($series as $seri) {
+            if ($seri['tags']['interaction_type'] == 'comment')
+            {
+                $comments = $seri['values'][0][1];
+            } else if ($seri['tags']['interaction_type'] == 'share')
+            {
+                $shares = $seri['values'][0][1];
+            } else {
+                $reactions += $seri['values'][0][1];
+            }
+            $total += $seri['values'][0][1];
+        }
+        return [
+            'comments' => [
+                'value' => $comments,
+                'percentage' => round($comments / $total, 2)
+            ],
+            'shares' => [
+                'value' => $shares,
+                'percentage' => round($shares / $total, 2)
+            ],
+            'reactions' => [
+                'value' => $reactions,
+                'percentage' => round($reactions / $total, 2)
+            ]
+        ];
     }
 
 
