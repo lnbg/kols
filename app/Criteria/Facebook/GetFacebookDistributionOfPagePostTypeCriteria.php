@@ -34,7 +34,7 @@ class GetFacebookDistributionOfPagePostTypeCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('profile_id', $this->profileID)->select(\DB::raw('facebook_posts.type, sum(id) as count'))
+        return $model->where('profile_id', $this->profileID)->select(\DB::raw('facebook_posts.type, count(id) as count'))
         ->groupBy('facebook_posts.type');
     }
 }
