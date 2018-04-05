@@ -33,8 +33,11 @@ class GetFacebookAnalyticsCriteria implements CriteriaInterface
         sum(facebook_posts.id) as sum_posts, 
         sum(share_count) as sum_share_count, 
         sum(thankful_count) as sum_thankyou_count, 
-        sum(comment_count) as sum_comment_count'))
-        ->groupBy('facebook_profiles.id');
+        sum(comment_count) as sum_comment_count,
+        sum(like_count + haha_count + wow_count + love_count + sad_count + thankful_count) as reaction_count,
+        sum(like_count + haha_count + wow_count + love_count + sad_count + thankful_count + share_count + comment_count) as interaction_count'))
+        ->groupBy('facebook_profiles.id')
+        ->orderBy('interaction_count', 'desc');
         return $model;
     }
 }
