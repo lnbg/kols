@@ -30,7 +30,7 @@ class GetFacebookAnalyticsCriteria implements CriteriaInterface
         sum(wow_count) as sum_wow_count, 
         sum(love_count) as sum_love_count,
         sum(sad_count) as sum_sad_count, 
-        sum(facebook_posts.id) as sum_posts, 
+        count(facebook_posts.id) as sum_posts, 
         sum(share_count) as sum_share_count, 
         sum(thankful_count) as sum_thankyou_count, 
         sum(comment_count) as sum_comment_count,
