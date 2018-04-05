@@ -17,7 +17,6 @@ class InfluxDB {
         $this->database = $this->influxDb->selectDB('analytics');
     }
 
-
     /******************************** FACEBOOK **********************************/
     /**
      * count total fans in days with profile id
@@ -136,13 +135,20 @@ class InfluxDB {
     public function analyticsNumberOfFanPosts($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
-        $query = "SELECT SUM(value) FROM facebook_profile_new_fan_posts WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY time(1d) tz('Asia/Saigon')";
+        $query = "SELECT SUM(value) FROM facebook_profile_new_fan_posts WHERE profile_id = '" . $profileID . "' GROUP BY time(1d) FILL(none) tz('Asia/Saigon')";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();
         return $points;
     }
 
+    /**
+     * analytics interaction in day
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
     public function analyticsInteractionInDaysByProfileID($profileID, $lastDays)
     {
         $query = "SELECT SUM(value) from facebook_post_interactions WHERE profile_id = '" . $profileID . "' GROUP BY interaction_type, time(1d) fill(0) tz('Asia/Saigon')";
@@ -194,6 +200,13 @@ class InfluxDB {
         return $results;
     }
 
+    /**
+     * analytics interaction in day per 1k fan
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
     public function analyticsInteractionInDayPer1KFans($profileID, $lastDays)
     {
         $totalFans = FacebookProfile::where('facebook_id', '=', $profileID)->first()->fan_count;
@@ -207,6 +220,13 @@ class InfluxDB {
         return $points;
     }
 
+    /**
+     * distribution of interaction
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
     public function distributionOfInteractions($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
@@ -246,9 +266,7 @@ class InfluxDB {
         ];
     }
 
-
     /******************************* INSTAGRAM **********************************/
-
 
     /**
      * count total media in days with instagram profile id
@@ -325,7 +343,14 @@ class InfluxDB {
             'data' => $results
         ];
     }
-
+    
+    /**
+     * analytics instagram interaction in days
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
     public function analyticsInstagramInteractionInDaysByProfileID($profileID, $lastDays)
     {
         $query = "SELECT SUM(value) from instagram_media_interactions WHERE profile_id = '" . $profileID . "' GROUP BY interaction_type, time(1d) tz('Asia/Saigon')";
@@ -368,6 +393,13 @@ class InfluxDB {
         return $results;
     }
 
+    /**
+     * distribution of interaction
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
     public function instagramDistributionOfInteractions($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
@@ -400,6 +432,13 @@ class InfluxDB {
         ];
     }
 
+    /**
+     * analytics interaction in day per 1k followers
+     *
+     * @param [type] $profileID
+     * @param [type] $lastDays
+     * @return void
+     */
     public function analyticsInstagramInteractionInDayPer1KFollowers($profileID, $lastDays)
     {
         $totalFollowers = InstagramProfile::where('instagram_id', '=', $profileID)->first()->follower_count;
