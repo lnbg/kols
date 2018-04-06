@@ -41,11 +41,8 @@ class InfluxDB {
      */
     public function getGrowthOfTotalFan($profileID, $lastDays)
     {
-        $_now = date('Y-m-d H:s:i');
-        $now = date('Y-m-d H:s:i', strtotime($_now . '+1 days'));
-        $last = date('Y-m-d H:s:i', strtotime($_now . '-' .$lastDays . 'days'));
          // executing a query will yield a resultset object
-        $query = "SELECT last(value) as value FROM facebook_profile_fans WHERE profile_id = '" . $profileID . "' and time > '" . $last . "' and time < '" . $now . "' group by time(1d) fill(0)";
+        $query = "SELECT last(value) as value FROM facebook_profile_fans WHERE profile_id = '" . $profileID . "' and time > now() -'" . $lastDays . "'d group by time(1d)";
         $result = $this->database->query($query);
          // get the points from the resultset yields an array
         $points = $result->getPoints();
