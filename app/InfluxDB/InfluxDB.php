@@ -380,7 +380,7 @@ class InfluxDB {
                 $totalInteractions += $val[1] ?? 0;
             }
         }
-        $maxInterctionValue = max($interactions);
+        $maxInterctionValue = count($interactions) > 0 ? max($interactions) : 0;
         $keyOfMaxInteraction = array_search($maxInterctionValue, $interactions);
         $results = [
             'comments' => $comments,
@@ -424,11 +424,11 @@ class InfluxDB {
         return [
             'comments' => [
                 'value' => $comments,
-                'percentage' => round($comments / $total, 2)
+                'percentage' => $total != 0 ? round($comments / $total, 2) : 0
             ],
             'likes' => [
                 'value' => $likes,
-                'percentage' => round($likes / $total, 2)
+                'percentage' => $total != 0 ? round($likes / $total, 2) : 0
             ],
         ];
     }

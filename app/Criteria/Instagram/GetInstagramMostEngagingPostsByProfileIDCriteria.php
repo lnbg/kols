@@ -40,9 +40,9 @@ class GetInstagramMostEngagingPostsByProfileIDCriteria implements CriteriaInterf
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('profile_id', $this->profileID)
+        return $model->where('account_id', $this->profileID)
         ->where('instagram_created_time', '>=', \DB::raw('DATE_SUB(NOW(), INTERVAL '. $this->lastDays .' DAY)'))
-        ->select(\DB::raw('id, instagram_id, instagram_media.type, profile_id, link, caption, media, filter, tags, like_count, comment_count, sum(like_count + comment_count) as interactions_count'))
+        ->select(\DB::raw('id, instagram_id, instagram_media.type, account_id, link, caption, image_url, video_url, sidecar_media, filter, tags, like_count, comment_count, sum(like_count + comment_count) as interactions_count'))
         ->groupBy('id')
         ->orderBy('interactions_count', 'DESC');
     }

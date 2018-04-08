@@ -23,16 +23,19 @@ class InstagramMediaTransformer extends TransformerAbstract
     {
         return [
             'id'         => (int) $model->id,
-            'instagram_id' => (string) $model->instagram,
+            'instagram_id' => (string) $model->instagram_id,
             'type' => (string) $model->type,
             'profile_id' => (int) $model->profile_id,
             'caption' => $model->caption,
-            'media' => $model->media,
+            'image_url' => $model->image_url,
+            'video_url' => $model->video_url,
+            'sidecar_media' => $model->sidecar_media,
             'filter' => $model->filter,
             'tags' => $model->tags,
             'link' => $model->link,
             'like_count' => (int) $model->like_count,
             'comment_count' => (int) $model->comment_count,
+            'interactions_count' => (int) $model->interactions_count
         ];
     }
 }

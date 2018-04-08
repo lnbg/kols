@@ -15,7 +15,7 @@ class InstagramProfile extends Model implements Transformable
 {
     use TransformableTrait;
 
-    protected $table = 'instagram_profiles';
+    protected $table = 'instagram_accounts';
     /**
      * The attributes that are mass assignable.
      *

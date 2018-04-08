@@ -229,7 +229,7 @@ class InstagramAnalyticsController extends BaseController
             return $this->response()->collection($posts, new InstagramMediaTransformer);
         } catch (\Exception $e) {
            // return $this->response()->errorInternal();
-            return $ex;
+            return $e;
         }
     }
 
