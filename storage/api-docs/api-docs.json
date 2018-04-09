@@ -700,6 +700,57 @@
                 }
             }
         },
+        "/instagram-analytics/{profile_id}/get-all-hashtags": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "get all tags by profile id",
+                "description": "get all hashtags",
+                "operationId": "analyticsInstagramGetAllTagsByProfileID",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "profile_id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/instagram-analytics/hashtags/get-top": {
+            "get": {
+                "tags": [
+                    "instagram analytics"
+                ],
+                "summary": "get top hashtags",
+                "description": "get top hashtags (top 10)",
+                "operationId": "analyticsInstagramGetTopHashTags",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "500": {
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
         "/youtube-analytics/channels": {
             "get": {
                 "tags": [

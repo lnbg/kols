@@ -461,7 +461,7 @@ class InfluxDB {
      */
     public function analyticsInstagramGetAllTagsByProfileID($profileID)
     {
-        $query = "select count(value) as count from instagram_account_used_tags where time > now() - 1000d and account_id = '" . $profileID . "' group by \"tag\"";
+        $query = "select count(value) as count from instagram_account_used_tags where account_id = '" . $profileID . "' group by \"tag\"";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $results = [];
@@ -480,4 +480,32 @@ class InfluxDB {
         });
         return $results;
     }
+
+    /**
+     * get top 10 hashtags from all instagram kols
+     *
+     * @return void
+     */
+    public function analyticsInstagramGetTopHashTags()
+    {
+        $query = "select count(value) as count from instagram_account_used_tags where time >= now() - 365d group by \"tag\"";
+        $result = $this->database->query($query);
+        // get the points from the resultset yields an array
+        $results = [];
+        $series = $result->getSeries();
+        foreach ($series as $serie) {
+            $results[] = [
+                'tag' => $serie['tags']['tag'],
+                'count' => $serie['values'][0][1]
+            ];
+        }
+        usort($results, function($a, $b) {
+            if ($a['count'] == $b['count']) {
+                return 0;
+            }
+            return ($a['count'] > $b['count']) ? -1 : 1;
+        });
+        return $results;
+    }
+
 }

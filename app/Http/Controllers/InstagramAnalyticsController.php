@@ -547,4 +547,35 @@ class InstagramAnalyticsController extends BaseController
             return $ex;
         }
     }
+
+    /**
+    *  get top hashtags
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/hashtags/get-top",
+    *     description="get top hashtags (top 10)",
+    *     operationId="analyticsInstagramGetTopHashTags",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsInstagramGetTopHashTags()
+    {
+        try {
+            $analyticsDatas = $this->influxDB->analyticsInstagramGetTopHashTags();
+            return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $ex;
+        }
+    }
 }
