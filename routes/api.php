@@ -51,7 +51,7 @@ $api->version('v1', function ($api) {
     $api->get('instagram-analytics/{profile_id}/evolution-of-interactions', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramInteractionInDaysByProfileID');
     $api->get('instagram-analytics/{profile_id}/distribution-of-interactions', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramDistributionOfInteraction');
     $api->get('instagram-analytics/{profile_id}/number-of-interactions-per-1kfollowers', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramInteractionInDayPer1KFollowers');
-    
+    $api->get('instagram-analytics/{profile_id}/get-all-hastags', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramGetAllTagsByProfileID');
     
     /**
      * youtube analytics

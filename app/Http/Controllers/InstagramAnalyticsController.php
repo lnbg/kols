@@ -507,4 +507,44 @@ class InstagramAnalyticsController extends BaseController
             return $ex;
         }
     }
+
+    /**
+    *  get all tags by profile id
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}/get-all-hashtags",
+    *     description="get all hashtags",
+    *     operationId="analyticsInstagramGetAllTagsByProfileID",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsInstagramGetAllTagsByProfileID($profile_id)
+    {
+        try {
+            $profileID = $profile_id;
+            $instagramID = $this->instagramProfileRepository->find($profileID)->instagram_id;
+            $analyticsDatas = $this->influxDB->analyticsInstagramGetAllTagsByProfileID($instagramID);
+            return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $ex;
+        }
+    }
 }
