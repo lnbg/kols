@@ -18,6 +18,7 @@ use App\Criteria\Instagram\GetAllInstagramProfilesCriteria;
 use App\Criteria\Instagram\GetInstagramProfileByProfileIDCriteria;
 use App\Criteria\Instagram\GetDistributionOfProfilePostTypeCriteria;
 use App\Criteria\Instagram\GetInstagramMostEngagingPostsByProfileIDCriteria;
+use App\Criteria\Instagram\GetInstagramMediaByTagCriteria;
 
 use App\InfluxDB\InfluxDB;
 
@@ -574,6 +575,46 @@ class InstagramAnalyticsController extends BaseController
         try {
             $analyticsDatas = $this->influxDB->analyticsInstagramGetTopHashTags();
             return $this->response()->array(['data' => $analyticsDatas]);
+        } catch (\Exception $ex) {
+            return $ex;
+        }
+    }
+
+
+    /**
+    *  get media by hashtags
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/hashtags/{tag_name}/media",
+    *     description="get media by hashtags",
+    *     operationId="getInstagramMediaByHashTag",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Parameter(
+    *       name="tag_name",
+    *       in="path",
+    *       description="tag_name",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function getInstagramMediaByHashTag($tag_name) 
+    {
+        try {
+            $this->instagramMediaRepository->pushCriteria(new GetInstagramMediaByTagCriteria($tag_name));
+            $analyticsDatas = $this->instagramMediaRepository->paginate(10);
+            return $this->response()->paginator($analyticsDatas, new InstagramMediaTransformer);
         } catch (\Exception $ex) {
             return $ex;
         }

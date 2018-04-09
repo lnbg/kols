@@ -43,6 +43,7 @@ $api->version('v1', function ($api) {
      */
     $api->get('instagram-analytics/profiles', 'App\Http\Controllers\InstagramAnalyticsController@getAllInstagramProfiles');
     $api->get('instagram-analytics/hashtags/get-top', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramGetTopHashTags');
+    $api->get('instagram-analytics/hashtags/{tag_name}/media', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramMediaByHashTag');
     $api->get('instagram-analytics/{profile_id}', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramProfileAnalyticsByProfileID');
     $api->get('instagram-analytics/{username}/media', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramMediaViaUsername');
     $api->get('instagram-analytics/{profile_id}/growth-total-followers', 'App\Http\Controllers\InstagramAnalyticsController@getInstagramGrowthOfTotalFollowers');
