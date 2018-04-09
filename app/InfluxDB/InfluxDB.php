@@ -461,7 +461,7 @@ class InfluxDB {
      */
     public function analyticsInstagramGetAllTagsByProfileID($profileID)
     {
-        $query = "select count(value) as count from instagram_account_used_tags where account_id = '" . $profileID . "' group by \"tag\"";
+        $query = "select sum(value) as count from instagram_account_used_tags where account_id = '" . $profileID . "' group by \"tag\"";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $results = [];
@@ -473,10 +473,10 @@ class InfluxDB {
             ];
         }
         usort($results, function($a, $b) {
-            if ($a['count'] == $b['count']) {
+            if ($a['sum'] == $b['sum']) {
                 return 0;
             }
-            return ($a['count'] > $b['count']) ? -1 : 1;
+            return ($a['sum'] > $b['sum']) ? -1 : 1;
         });
         return $results;
     }
@@ -488,7 +488,7 @@ class InfluxDB {
      */
     public function analyticsInstagramGetTopHashTags()
     {
-        $query = "select count(value) as count from instagram_account_used_tags where time >= now() - 365d group by \"tag\"";
+        $query = "select sum(value) as sum from instagram_account_used_tags where time >= now() - 365d group by \"tag\"";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $results = [];
@@ -500,10 +500,10 @@ class InfluxDB {
             ];
         }
         usort($results, function($a, $b) {
-            if ($a['count'] == $b['count']) {
+            if ($a['sum'] == $b['sum']) {
                 return 0;
             }
-            return ($a['count'] > $b['count']) ? -1 : 1;
+            return ($a['sum'] > $b['sum']) ? -1 : 1;
         });
         return $results;
     }
