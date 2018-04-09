@@ -38,9 +38,9 @@ class FacebookAnalyticsOverviewTransformer extends TransformerAbstract
             'sum_posts' => (int) $model->sum_posts,
             'sum_share_count' => (int) $model->sum_share_count,
             'sum_thankyou_count' => (int) $model->sum_thankyou_count,
-            'sum_comment_count' => (int) $model->sum_comment_count,
-            'reaction_count' => (int) $model->reaction_count,
-            'interaction_count' => (int) $model->interaction_count
+            'sum_comment_count' => (int) $model->sum_comment_count
+            // 'reaction_count' => (int) $model->reaction_count,
+            // 'interaction_count' => (int) $model->interaction_count
         ];
     }
 }

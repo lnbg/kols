@@ -25,6 +25,7 @@ class GetFacebookAnalyticsCriteria implements CriteriaInterface
         $model = $model->leftJoin('facebook_posts', 'facebook_profiles.id', 'facebook_posts.profile_id')
         ->select(\DB::raw('facebook_profiles.id, facebook_profiles.facebook_id, facebook_profiles.type,
         facebook_profiles.name, facebook_profiles.username, facebook_profiles.fan_count, facebook_profiles.picture,
+        facebook_profiles.verification_status,
         sum(like_count) AS sum_like_count, 
         sum(haha_count) as sum_haha_count,
         sum(wow_count) as sum_wow_count, 
@@ -33,10 +34,10 @@ class GetFacebookAnalyticsCriteria implements CriteriaInterface
         count(facebook_posts.id) as sum_posts, 
         sum(share_count) as sum_share_count, 
         sum(thankful_count) as sum_thankyou_count, 
-        sum(comment_count) as sum_comment_count,
-        sum(like_count + haha_count + wow_count + love_count + sad_count + thankful_count + share_count + comment_count) as interaction_count'))
+        sum(comment_count) as sum_comment_count'))
+        //sum(like_count + haha_count + wow_count + love_count + sad_count + thankful_count + share_count + comment_count) as interaction_count'))
         ->groupBy('facebook_profiles.id')
-        ->orderBy('interaction_count', 'desc');
+        ->orderBy('facebook_profiles.fan_count', 'desc');
         return $model;
     }
 }
