@@ -461,7 +461,7 @@ class InfluxDB {
      */
     public function analyticsInstagramGetAllTagsByProfileID($profileID)
     {
-        $query = "select sum(value) as count from instagram_account_used_tags where account_id = '" . $profileID . "' group by \"tag\"";
+        $query = "select sum(value) as sum from instagram_account_used_tags where account_id = '" . $profileID . "' group by \"tag\"";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $results = [];
