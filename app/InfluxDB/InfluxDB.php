@@ -42,7 +42,7 @@ class InfluxDB {
     public function getGrowthOfTotalFan($profileID, $lastDays)
     {
          // executing a query will yield a resultset object
-        $query = "SELECT last(value) as value FROM facebook_profile_fans WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d group by time(1d)";
+        $query = "SELECT last(value) as value FROM facebook_profile_fans WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d group by time(1d) tz('Asia/Saigon')";
         $result = $this->database->query($query);
          // get the points from the resultset yields an array
         $points = $result->getPoints();
@@ -277,7 +277,7 @@ class InfluxDB {
     public function analyticsTotalMediaInDaysByInstagramID($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
-        $query = "SELECT last(value) as value FROM instagram_profile_media WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d group by time(1d) fill(0) tz('Asia/Saigon')";
+        $query = "SELECT last(value) as value FROM instagram_account_media WHERE account_id = '" . $profileID . "' and time > now() - " . $lastDays . "d group by time(1d) fill(0) tz('Asia/Saigon')";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();
@@ -294,7 +294,7 @@ class InfluxDB {
     public function getGrowthOfTotalFollowers($profileID, $lastDays)
     {
          // executing a query will yield a resultset object
-        $query = "SELECT last(value) FROM instagram_profile_followers WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d  GROUP BY time(1d) FILL(0)";
+        $query = "SELECT last(value) FROM instagram_account_followers WHERE account_id = '" . $profileID . "' and time > now() - " . $lastDays . "d  GROUP BY time(1d) FILL(0)";
         $result = $this->database->query($query);
          // get the points from the resultset yields an array
         $points = $result->getPoints();
@@ -354,7 +354,7 @@ class InfluxDB {
      */
     public function analyticsInstagramInteractionInDaysByProfileID($profileID, $lastDays)
     {
-        $query = "SELECT SUM(value) from instagram_media_interactions WHERE profile_id = '" . $profileID . "' GROUP BY interaction_type, time(1d) tz('Asia/Saigon')";
+        $query = "SELECT SUM(value) from instagram_media_interactions WHERE account_id = '" . $profileID . "' GROUP BY interaction_type, time(1d) tz('Asia/Saigon')";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $series = $result->getSeries();
@@ -404,7 +404,7 @@ class InfluxDB {
     public function instagramDistributionOfInteractions($profileID, $lastDays)
     {
         // executing a query will yield a resultset object
-        $query = "SELECT SUM(value) FROM instagram_media_interactions WHERE profile_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY interaction_type";
+        $query = "SELECT SUM(value) FROM instagram_media_interactions WHERE account_id = '" . $profileID . "' and time > now() - " . $lastDays . "d GROUP BY interaction_type";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $series = $result->getSeries();
@@ -443,7 +443,7 @@ class InfluxDB {
     public function analyticsInstagramInteractionInDayPer1KFollowers($profileID, $lastDays)
     {
         $totalFollowers = InstagramProfile::where('instagram_id', '=', $profileID)->first()->follower_count;
-        $query = "SELECT (SUM(value) * 1000 / " . $totalFollowers . ") as value from instagram_media_interactions WHERE profile_id = '" . $profileID . "' GROUP BY time(1d) FILL(0) tz('Asia/Saigon')";
+        $query = "SELECT (SUM(value) * 1000 / " . $totalFollowers . ") as value from instagram_media_interactions WHERE account_id = '" . $profileID . "' GROUP BY time(1d) FILL(0) tz('Asia/Saigon')";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();
