@@ -469,7 +469,7 @@ class InfluxDB {
         foreach ($series as $serie) {
             $results[] = [
                 'tag' => $serie['tags']['tag'],
-                'count' => $serie['values'][0][1]
+                'sum' => $serie['values'][0][1]
             ];
         }
         usort($results, function($a, $b) {
@@ -496,7 +496,7 @@ class InfluxDB {
         foreach ($series as $serie) {
             $results[] = [
                 'tag' => $serie['tags']['tag'],
-                'count' => $serie['values'][0][1]
+                'sum' => $serie['values'][0][1]
             ];
         }
         usort($results, function($a, $b) {
