@@ -25,7 +25,7 @@ class InstagramMediaTransformer extends TransformerAbstract
             'id'         => (int) $model->id,
             'instagram_id' => (string) $model->instagram_id,
             'type' => (string) $model->type,
-            'profile_id' => (int) $model->profile_id,
+            'account_id' => (int) $model->account_id,
             'caption' => $model->caption,
             'thumbnail' => $model->thumbnail,
             'image_url' => $model->image_url,
@@ -36,7 +36,8 @@ class InstagramMediaTransformer extends TransformerAbstract
             'link' => $model->link,
             'like_count' => (int) $model->like_count,
             'comment_count' => (int) $model->comment_count,
-            'interactions_count' => (int) $model->interactions_count
+            'interactions_count' => (int) $model->interactions_count,
+            'account' => $model->account
         ];
     }
 }

@@ -34,7 +34,7 @@ class GetInstagramMediaByTagCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->whereRaw(\DB::raw("tags like binary '%#" . $this->tag . "\"%'"))
+        return $model::with('account')->whereRaw(\DB::raw("tags like binary '%#" . $this->tag . "\"%'"))
         ->orderBy(\DB::raw('like_count + comment_count'), 'DESC');
     }
 }

@@ -23,4 +23,8 @@ class InstagramMedia extends Model implements Transformable
      */
     protected $fillable = [];
 
+    public function account()
+    {
+        return $this->belongsTo(\App\Entities\InstagramProfile::class, 'account_id');
+    }
 }
