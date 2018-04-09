@@ -462,10 +462,6 @@ class InfluxDB {
      */
     public function analyticsInstagramGetAllTagsByProfileID($profileID)
     {
-        if (Cache::has('allHashTagsProfile'))
-        {
-            return Cache::get('allHashTagsProfile');
-        }
         $query = "select sum(value) as sum from instagram_account_used_tags where account_id = '" . $profileID . "' group by \"tag\"";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
@@ -483,10 +479,6 @@ class InfluxDB {
             }
             return ($a['sum'] > $b['sum']) ? -1 : 1;
         });
-        if (!Cache::has('allHashTagsProfile')) {
-            $expiresAt = now()->addMonths(1);
-            Cache::add('allHashTagsProfile', $results, $expiresAt);
-        }
         return $results;
     }
 
