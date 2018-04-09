@@ -442,8 +442,8 @@ class InfluxDB {
      */
     public function analyticsInstagramInteractionInDayPer1KFollowers($profileID, $lastDays)
     {
-        $totalFollowers = InstagramProfile::where('instagram_id', '=', $profileID)->first()->follower_count;
-        $query = "SELECT (SUM(value) * 1000 / " . $totalFollowers . ") as value from instagram_media_interactions WHERE account_id = '" . $profileID . "' GROUP BY time(1d) FILL(0) tz('Asia/Saigon')";
+        $totalFollowers = InstagramProfile::where('instagram_id', '=', $profileID)->first()->followed_by_count;
+        $query = "SELECT (SUM(value) * 1000 / " . $totalFollowers . ") AS value from instagram_media_interactions WHERE account_id = '" . $profileID . "' GROUP BY time(1d) FILL(0) tz('Asia/Saigon')";
         $result = $this->database->query($query);
         // get the points from the resultset yields an array
         $points = $result->getPoints();
