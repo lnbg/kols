@@ -44,6 +44,6 @@ class GetInstagramMostEngagingPostsByProfileIDCriteria implements CriteriaInterf
         ->where('instagram_created_time', '>=', \DB::raw('DATE_SUB(NOW(), INTERVAL '. $this->lastDays .' DAY)'))
         ->select(\DB::raw('id, instagram_id, instagram_media.type, account_id, link, caption, image_url, video_url, sidecar_media, filter, tags, like_count, comment_count, sum(like_count + comment_count) as interactions_count'))
         ->groupBy('id')
-        ->orderBy('interactions_count', 'DESC');
+        ->orderBy('interactions_count', 'DESC')->limit(10);
     }
 }
