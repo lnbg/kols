@@ -27,6 +27,7 @@ class InstagramMediaTransformer extends TransformerAbstract
             'type' => (string) $model->type,
             'profile_id' => (int) $model->profile_id,
             'caption' => $model->caption,
+            'thumbnail' => $model->thumbnail,
             'image_url' => $model->image_url,
             'video_url' => $model->video_url,
             'sidecar_media' => $model->sidecar_media,
