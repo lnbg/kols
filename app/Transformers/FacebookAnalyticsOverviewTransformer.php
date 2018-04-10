@@ -31,16 +31,11 @@ class FacebookAnalyticsOverviewTransformer extends TransformerAbstract
             'fan_count' => (int) $model->fan_count,
             'verification_status' => (string) $model->verification_status,
             'picture' => (string) $model->picture,
-            'sum_haha_count' => (int) $model->sum_haha_count,
-            'sum_wow_count' => (int) $model->sum_wow_count,
-            'sum_love_count' => (int) $model->sum_love_count,
-            'sum_sad_count' => (int) $model->sum_sad_count,
-            'sum_posts' => (int) $model->sum_posts,
-            'sum_share_count' => (int) $model->sum_share_count,
-            'sum_thankyou_count' => (int) $model->sum_thankyou_count,
-            'sum_comment_count' => (int) $model->sum_comment_count
-            // 'reaction_count' => (int) $model->reaction_count,
-            // 'interaction_count' => (int) $model->interaction_count
+            'post_count' => (int) $model->post_count,
+            'interaction_count' => (int) $model->interaction_count,
+            'reaction_count' => (int) $model->reaction_count,
+            'share_count' => (int) $model->share_count,
+            'comment_count' => (int) $model->comment_count,
         ];
     }
 }

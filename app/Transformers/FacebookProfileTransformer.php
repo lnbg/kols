@@ -29,6 +29,11 @@ class FacebookProfileTransformer extends TransformerAbstract
             'name' => (string) $model->name,
             'username' => (string) $model->username,
             'fan_count' => (int) $model->fan_count,
+            'post_count' => (int) $model->post_count,
+            'interaction_count' => (int) $model->interaction_count,
+            'reaction_count' => (int) $model->reaction_count,
+            'share_count' => (int) $model->share_count,
+            'comment_count' => (int) $model->comment_count,
             'verification_status' => (string) $model->verification_status,
             'picture' => (string) $model->picture
         ];
