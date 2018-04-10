@@ -39,4 +39,20 @@ class FacebookAnalyticsOverviewTransformer extends TransformerAbstract
             'comment_count' => (int) $model->comment_count,
         ];
     }
+
+    /**
+     * Transform array the FacebookProfile entity.
+     *
+     * @param Array
+     *
+     * @return array
+     */
+    public function transformArray($models)
+    {
+        $results = [];
+        foreach ($models as $model) {
+            $results[] = $this->transform($model);
+        }
+        return $results;
+    }
 }

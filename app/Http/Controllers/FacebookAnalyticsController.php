@@ -17,6 +17,7 @@ use App\Criteria\Facebook\GetFacebookAnalyticsCriteria;
 use App\Criteria\Facebook\GetFacebookProfileByIDCriteria;
 use App\Criteria\Facebook\GetFacebookMostEngagingPostsByProfileIDCriteria;
 use App\Criteria\Facebook\GetFacebookDistributionOfPagePostTypeCriteria;
+use App\Criteria\Facebook\GetTopFacebookFansCriteria;
 
 use App\InfluxDB\InfluxDB;
 
@@ -504,6 +505,40 @@ class FacebookAnalyticsController extends BaseController
         $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
         $analyticsDatas = $this->influxDB->analyticsInteractionInDayPer1KFans($facebookID, $lastDays);
         return $this->response()->array(['data' => $analyticsDatas]);
+    }
+
+    /**
+    *  facebook analytics data for dashboard
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/analytics/dashboard",
+    *     description="facebook analytics data for dashboard",
+    *     operationId="analyticsFacebookDashBoard",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsFacebookDashBoard()
+    {
+        $this->facebookProfileRepository->pushCriteria(GetTopFacebookFansCriteria::class);
+        $facebookOverviewTransfomerInstance = new FacebookAnalyticsOverviewTransformer();
+        $topFans = $facebookOverviewTransfomerInstance->transformArray($this->facebookProfileRepository->get());
+        $now = date('Y-m-d');
+        $affectiveDate = date('Y-m', strtotime($now . '-1 months'));
+        return $this->response()->array([
+            'date' => $affectiveDate,
+            'top_fans' => $topFans,
+        ]);
     }
      /**
      * influx db debugger

@@ -22,13 +22,14 @@ class GetTopFollowersInstagramCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        $now = date('Y-m');
+        $now = date('Y-m-d');
+        $affectiveDate = date('Y-m', strtotime($now . '-1 months'));
         return $model->leftJoin('instagram_media', 'instagram_accounts.id', 'instagram_media.account_id')
         ->select(\DB::raw('instagram_accounts.id, instagram_accounts.instagram_id, instagram_accounts.picture, 
         instagram_accounts.name, instagram_accounts.username, instagram_accounts.external_url, 
         sum(instagram_media.like_count + instagram_media.comment_count) as interaction_count'))
         ->groupBy('instagram_media.account_id')
-        ->whereRaw(\DB::raw('instagram_media.created_at > ' . $now))
+        ->whereRaw(\DB::raw('instagram_media.created_at > ' . $affectiveDate))
         ->orderBy('instagram_accounts.followed_by_count', 'desc')->limit(10);
     }
 }
