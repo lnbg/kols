@@ -31,6 +31,7 @@ class FacebookAnalyticsOverviewTransformer extends TransformerAbstract
             'fan_count' => (int) $model->fan_count,
             'verification_status' => (string) $model->verification_status,
             'picture' => (string) $model->picture,
+            'cover' => (array) json_decode($model->cover),
             'post_count' => (int) $model->post_count,
             'interaction_count' => (int) $model->interaction_count,
             'reaction_count' => (int) $model->reaction_count,

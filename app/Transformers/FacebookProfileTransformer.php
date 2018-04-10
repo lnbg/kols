@@ -35,7 +35,8 @@ class FacebookProfileTransformer extends TransformerAbstract
             'share_count' => (int) $model->share_count,
             'comment_count' => (int) $model->comment_count,
             'verification_status' => (string) $model->verification_status,
-            'picture' => (string) $model->picture
+            'picture' => (string) $model->picture,
+            'cover' => (array) json_decode($model->cover)
         ];
     }
 }
