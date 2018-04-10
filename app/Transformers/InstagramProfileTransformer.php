@@ -29,6 +29,9 @@ class InstagramProfileTransformer extends TransformerAbstract
             'media_count' => (int) $model->media_count,
             'followed_by_count' => (int) $model->followed_by_count,
             'follow_count' => (int) $model->follow_count,
+            'like_count' => (int) $model->like_count,
+            'interaction_count' => (int) $model->interaction_count,
+            'comment_count' => (int) $model->comment_count,
             'picture' => (string) $model->picture,
         ];
     }

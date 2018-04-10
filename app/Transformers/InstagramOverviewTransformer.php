@@ -32,6 +32,25 @@ class InstagramOverviewTransformer extends TransformerAbstract
             'picture' => (string) $model->picture,
             'sum_like_count' => (int) $model->sum_like_count,
             'sum_comment_count' => (int) $model->sum_comment_count,
+            'like_count' => (int) $model->like_count,
+            'interaction_count' => (int) $model->interaction_count,
+            'comment_count' => (int) $model->comment_count,
         ];
+    }
+
+    /**
+     * Transform array the InstagramProfile entity.
+     *
+     * @param Array
+     *
+     * @return array
+     */
+    public function transformArray($models)
+    {
+        $results = [];
+        foreach ($models as $model) {
+            $results[] = $this->transform($model);
+        }
+        return $results;
     }
 }

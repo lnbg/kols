@@ -19,6 +19,7 @@ use App\Criteria\Instagram\GetInstagramProfileByProfileIDCriteria;
 use App\Criteria\Instagram\GetDistributionOfProfilePostTypeCriteria;
 use App\Criteria\Instagram\GetInstagramMostEngagingPostsByProfileIDCriteria;
 use App\Criteria\Instagram\GetInstagramMediaByTagCriteria;
+use App\Criteria\Instagram\GetTopFollowersInstagramCriteria;
 
 use App\InfluxDB\InfluxDB;
 
@@ -615,6 +616,43 @@ class InstagramAnalyticsController extends BaseController
             $this->instagramMediaRepository->pushCriteria(new GetInstagramMediaByTagCriteria($tag_name));
             $analyticsDatas = $this->instagramMediaRepository->paginate(10);
             return $this->response()->paginator($analyticsDatas, new InstagramMediaTransformer);
+        } catch (\Exception $ex) {
+            return $ex;
+        }
+    }
+
+    /**
+    *  instagram: analytics instagram data for dashboard
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/analytics/dashboard",
+    *     description="get top 10 followers, top hashtags",
+    *     operationId="analyticsInstagramDashBoard",
+    *     produces={"application/json"},
+    *     tags={"instagram analytics"},
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsInstagramDashBoard()
+    {
+        try {
+            $this->instagramProfileRepository->pushCriteria(GetTopFollowersInstagramCriteria::class);
+            $instagramOverviewTransfomerInstance = new InstagramOverviewTransformer();
+            $topFollowers = $instagramOverviewTransfomerInstance->transformArray($this->instagramProfileRepository->get());
+            $topHashTags = $this->influxDB->analyticsInstagramGetTopHashTags();
+            return $this->response()->array([
+                'top_followers' => $topFollowers,
+                'top_hashtags' => array_splice($topHashTags, 0, 10)
+            ]);
         } catch (\Exception $ex) {
             return $ex;
         }
