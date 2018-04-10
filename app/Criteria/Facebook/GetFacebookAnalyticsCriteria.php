@@ -26,7 +26,6 @@ class GetFacebookAnalyticsCriteria implements CriteriaInterface
         facebook_profiles.name, facebook_profiles.username, facebook_profiles.fan_count, facebook_profiles.picture,
         facebook_profiles.verification_status, post_count, facebook_profiles.share_count, facebook_profiles.interaction_count, 
         facebook_profiles.reaction_count, facebook_profiles.comment_count'))
-        ->groupBy('facebook_profiles.id')
         ->orderBy('facebook_profiles.fan_count', 'desc');
         return $model;
     }
