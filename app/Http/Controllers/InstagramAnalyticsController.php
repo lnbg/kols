@@ -650,6 +650,7 @@ class InstagramAnalyticsController extends BaseController
             $topFollowers = $instagramOverviewTransfomerInstance->transformArray($this->instagramProfileRepository->get());
             $topHashTags = $this->influxDB->analyticsInstagramGetTopHashTags();
             return $this->response()->array([
+                'date' => date('Y-m'),
                 'top_followers' => $topFollowers,
                 'top_hashtags' => array_splice($topHashTags, 0, 10)
             ]);
