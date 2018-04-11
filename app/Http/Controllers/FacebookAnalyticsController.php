@@ -562,6 +562,13 @@ class FacebookAnalyticsController extends BaseController
     *     operationId="analyticsFacebookPageFansAge",
     *     produces={"application/json"},
     *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
     *     @SWG\Response(
     *         response=200,
     *         description="Successful operation"
@@ -572,9 +579,9 @@ class FacebookAnalyticsController extends BaseController
     *     )
     * )
     */
-    public function analyticsFacebookPageFansAge()
+    public function analyticsFacebookPageFansAge($profile_id)
     {
-        $facebookProfile = $this->facebookProfileRepository->find(18);
+        $facebookProfile = $this->facebookProfileRepository->find($profile_id);
         return $this->response()->array([
             'data' => $this->facebookHelper->getPageFansAge($facebookProfile->facebook_id, $facebookProfile->access_token)
         ]);
