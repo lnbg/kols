@@ -20,6 +20,7 @@ use App\Criteria\Facebook\GetFacebookDistributionOfPagePostTypeCriteria;
 use App\Criteria\Facebook\GetTopFacebookFansCriteria;
 
 use App\InfluxDB\InfluxDB;
+use App\Facebook\FacebookHelper;
 
 
 /**
@@ -44,6 +45,13 @@ class FacebookAnalyticsController extends BaseController
      * @var InfluxDB
      */
     protected $influxDB;
+
+    /**
+     * @var FacebookHelper
+     *
+     * @var [type]
+     */
+    protected $facebookHelper;
     /**
      * FacebookProfilesController constructor.
      *
@@ -51,11 +59,13 @@ class FacebookAnalyticsController extends BaseController
      */
     public function __construct(FacebookProfileRepository $facebookProfileRepository, 
     FacebookPostRepository $facebookPostRepository,
-    influxDB $influxDB)
+    influxDB $influxDB,
+    FacebookHelper $facebookHelper)
     {
         $this->facebookProfileRepository = $facebookProfileRepository;
         $this->facebookPostRepository = $facebookPostRepository;
         $this->influxDB = $influxDB;
+        $this->facebookHelper = $facebookHelper;
     }
     
     /**
@@ -540,6 +550,35 @@ class FacebookAnalyticsController extends BaseController
             'top_fans' => $topFans,
         ]);
     }
+
+    /**
+    *  facebook get page fans age
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/fans-age",
+    *     description="facebook analytics fans age",
+    *     operationId="analyticsFacebookPageFansAge",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsFacebookPageFansAge()
+    {
+        $facebookProfile = $this->facebookProfileRepository->find(18);
+        return $this->response()->array([
+            'data' => $this->facebookHelper->getPageFansAge($facebookProfile->facebook_id, $facebookProfile->access_token)
+        ]);
+    }
      /**
      * influx db debugger
      * @uses Influx database
@@ -547,16 +586,10 @@ class FacebookAnalyticsController extends BaseController
      */
     public function debug()
     {
-        // try {
-            // $debugData = $this->influxDB->analyticsDistributionOfPagePostType(1410360992530635, 30);
-            // return $this->response()->array($debugData);
-            
-        // } catch (\Exception $ex) {
-        //     return $this->response()->errorInternal();
-        // }
-        $this->facebookPostRepository->pushCriteria(new GetFacebookDistributionOfPagePostTypeCriteria(1));
-        $debugData = $this->facebookPostRepository->all();
-        return $this->response()->array(['data' => $debugData]);
+        $facebookProfile = $this->facebookProfileRepository->find(18);
+        return $this->response()->array([
+            'data' => $this->facebookHelper->getPageFansGenderAge($facebookProfile->facebook_id, $facebookProfile->access_token)
+        ]);
     }
 
 

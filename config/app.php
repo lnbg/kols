@@ -164,6 +164,7 @@ return [
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
         Dingo\Api\Provider\LaravelServiceProvider::class,
         L5Swagger\L5SwaggerServiceProvider::class,
+        SammyK\LaravelFacebookSdk\LaravelFacebookSdkServiceProvider::class,
     ],
 
     /*
@@ -212,6 +213,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Facebook' => SammyK\LaravelFacebookSdk\FacebookFacade::class,
 
     ],
 
