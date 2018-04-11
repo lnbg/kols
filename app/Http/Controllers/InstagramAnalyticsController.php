@@ -672,7 +672,7 @@ class InstagramAnalyticsController extends BaseController
     *     description="instargam page get the best time to publish",
     *     operationId="analyticsInstagramGetTheBestTimePublished",
     *     produces={"application/json"},
-    *     tags={"instargam analytics"},
+    *     tags={"instagram analytics"},
     *     @SWG\Parameter(
     *       name="profile_id",
     *       in="path",
