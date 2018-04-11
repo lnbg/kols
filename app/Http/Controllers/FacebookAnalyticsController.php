@@ -557,7 +557,7 @@ class FacebookAnalyticsController extends BaseController
     * @return \Illuminate\Http\JsonResponse
     *
     * @SWG\Get(
-    *     path="/facebook-analytics/{profile_id}insigths/fans-age",
+    *     path="/facebook-analytics/{profile_id}/insigths/fans-age",
     *     description="facebook page insights fans age",
     *     operationId="analyticsFacebookPageInsightsFansAge",
     *     produces={"application/json"},
