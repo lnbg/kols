@@ -18,6 +18,7 @@ use App\Criteria\Facebook\GetFacebookProfileByIDCriteria;
 use App\Criteria\Facebook\GetFacebookMostEngagingPostsByProfileIDCriteria;
 use App\Criteria\Facebook\GetFacebookDistributionOfPagePostTypeCriteria;
 use App\Criteria\Facebook\GetTopFacebookFansCriteria;
+use App\Criteria\Facebook\GetFacebookTheBestTimePublishCriteria;
 
 use App\InfluxDB\InfluxDB;
 use App\Facebook\FacebookHelper;
@@ -586,6 +587,44 @@ class FacebookAnalyticsController extends BaseController
             'data' => $this->facebookHelper->getPageFansAge($facebookProfile->facebook_id, $facebookProfile->access_token)
         ]);
     }
+
+    /**
+    *  the best time to publish
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/insigths/best-time-publish",
+    *     description="facebook page get the best time to publish",
+    *     operationId="analyticsFacebookGetTheBestTimePublished",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsFacebookGetTheBestTimePublished($profile_id)
+    {
+        $this->facebookPostRepository->pushCriteria(new GetFacebookTheBestTimePublishCriteria($profile_id));
+        $data = $this->facebookPostRepository->get();
+        return $this->response()->array([
+            'data' => $data,
+        ]);
+    }
+
      /**
      * influx db debugger
      * @uses Influx database
