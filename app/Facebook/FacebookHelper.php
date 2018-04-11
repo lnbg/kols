@@ -22,7 +22,7 @@ class FacebookHelper
     {
         $query = '/' . $facebookPageID . '/insights?metric=page_fans_gender_age&since=' . date('Y-m-d');
         $response = $this->facebookSDK->get($query, $accessToken);
-        $data = [
+        $ages = [
             "13-17" => 0,
             "18-24" => 0,
             "25-34" => 0,
@@ -30,6 +30,11 @@ class FacebookHelper
             "45-54" => 0,
             "55-64" => 0,
             "65+" => 0,
+        ];
+        $genders = [
+            'M' => 0,
+            'F' => 0,
+            'U' => 0
         ];
         $response = $response->getDecodedBody();
         if (count($response) > 0) {
@@ -39,12 +44,17 @@ class FacebookHelper
                 foreach ($response as $key => $res) {
                     $key = explode('.', $key);
                     if (count($key) > 1) {
-                        $key = $key[1];
+                        $keyAge = $key[1];
+                        $keyGender = $key[0];
+                        $ages[$keyAge] += $res;
+                        $genders[$keyGender] += $res;
                     }
-                    $data[$key] += $res;
                 }
             }
         }
-        return $data;
+        return [
+            'age' => $ages,
+            'genders' => $genders
+        ];
     }
 }
