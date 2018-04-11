@@ -552,14 +552,14 @@ class FacebookAnalyticsController extends BaseController
     }
 
     /**
-    *  facebook get page fans age
+    *  facebook page insights fans age
     *
     * @return \Illuminate\Http\JsonResponse
     *
     * @SWG\Get(
     *     path="/facebook-analytics/fans-age",
-    *     description="facebook analytics fans age",
-    *     operationId="analyticsFacebookPageFansAge",
+    *     description="facebook page insights fans age",
+    *     operationId="analyticsFacebookPageInsightsFansAge",
     *     produces={"application/json"},
     *     tags={"facebook analytics"},
     *     @SWG\Parameter(
@@ -579,7 +579,7 @@ class FacebookAnalyticsController extends BaseController
     *     )
     * )
     */
-    public function analyticsFacebookPageFansAge($profile_id)
+    public function analyticsFacebookPageInsightsFansAge($profile_id)
     {
         $facebookProfile = $this->facebookProfileRepository->find($profile_id);
         return $this->response()->array([
