@@ -20,6 +20,7 @@ use App\Criteria\Instagram\GetDistributionOfProfilePostTypeCriteria;
 use App\Criteria\Instagram\GetInstagramMostEngagingPostsByProfileIDCriteria;
 use App\Criteria\Instagram\GetInstagramMediaByTagCriteria;
 use App\Criteria\Instagram\GetTopFollowersInstagramCriteria;
+use App\Criteria\Instagram\GetInstagramTheBestTimePublishCriteria;
 
 use App\InfluxDB\InfluxDB;
 
@@ -659,5 +660,42 @@ class InstagramAnalyticsController extends BaseController
         } catch (\Exception $ex) {
             return $ex;
         }
+    }
+
+    /**
+    *  instagram the best time to publish
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/instagram-analytics/{profile_id}/insigths/best-time-publish",
+    *     description="instargam page get the best time to publish",
+    *     operationId="analyticsInstagramGetTheBestTimePublished",
+    *     produces={"application/json"},
+    *     tags={"instargam analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function analyticsInstagramGetTheBestTimePublished($profile_id)
+    {
+        $this->instagramMediaRepository->pushCriteria(new GetInstagramTheBestTimePublishCriteria($profile_id));
+        $data = $this->instagramMediaRepository->get();
+        return $this->response()->array([
+            'data' => $data,
+        ]);
     }
 }

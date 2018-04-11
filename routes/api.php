@@ -58,6 +58,7 @@ $api->version('v1', function ($api) {
     $api->get('instagram-analytics/{profile_id}/number-of-interactions-per-1kfollowers', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramInteractionInDayPer1KFollowers');
     $api->get('instagram-analytics/{profile_id}/get-all-hashtags', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramGetAllTagsByProfileID');
     $api->get('instagram-analytics/analytics/dashboard', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramDashBoard');
+    $api->get('instagram-analytics/{profile_id}/insigths/best-time-publish', 'App\Http\Controllers\InstagramAnalyticsController@analyticsInstagramGetTheBestTimePublished');
     
     /**
      * youtube analytics
