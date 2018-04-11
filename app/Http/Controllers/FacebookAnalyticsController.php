@@ -544,8 +544,7 @@ class FacebookAnalyticsController extends BaseController
         $this->facebookProfileRepository->pushCriteria(GetTopFacebookFansCriteria::class);
         $facebookOverviewTransfomerInstance = new FacebookAnalyticsOverviewTransformer();
         $topFans = $facebookOverviewTransfomerInstance->transformArray($this->facebookProfileRepository->get());
-        $now = date('Y-m-d');
-        $affectiveDate = date('Y-m', strtotime($now . '-1 months'));
+        $affectiveDate = date('Y-m');
         return $this->response()->array([
             'date' => $affectiveDate,
             'top_fans' => $topFans,
