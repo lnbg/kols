@@ -306,7 +306,7 @@ class InfluxDB {
     public function getGrowthOfTotalFollowers($profileID, $lastDays)
     {
          // executing a query will yield a resultset object
-        $query = "SELECT last(value) FROM instagram_account_followers WHERE account_id = '" . $profileID . "' and time > now() - " . $lastDays . "d  GROUP BY time(1d) FILL(0)";
+        $query = "SELECT last(value) as value FROM instagram_account_followers WHERE account_id = '" . $profileID . "' and time > now() - " . $lastDays . "d  GROUP BY time(1d) FILL(0)";
         $result = $this->database->query($query);
          // get the points from the resultset yields an array
         $points = $result->getPoints();
@@ -318,19 +318,19 @@ class InfluxDB {
         $maxChangeFans = 0;
         $totalChangeFans = 0;
         foreach ($points as $point) {
-            if (isset($point['last'])) {
+            if (isset($point['value'])) {
                 if ($currentPoint == 0 && $oldPoint == 0) 
                 {
-                    $currentPoint = $oldPoint = $point['last'];
-                    $minFans = $point['last'];
-                    $maxFans = $point['last'];
+                    $currentPoint = $oldPoint = $point['value'];
+                    $minFans = $point['value'];
+                    $maxFans = $point['value'];
                 } else {
-                    $currentPoint = $point['last'];
-                    if ($point['last'] > $maxFans) {
-                        $maxFans = $point['last'];
+                    $currentPoint = $point['value'];
+                    if ($point['value'] > $maxFans) {
+                        $maxFans = $point['value'];
                     }
-                    if ($point['last'] < $minFans) {
-                        $minFans = $point['last'];
+                    if ($point['value'] < $minFans) {
+                        $minFans = $point['value'];
                     }
                 }
             }
