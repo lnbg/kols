@@ -353,7 +353,8 @@ class InfluxDB {
             'total_change_fans' => $totalChangeFans,
             'max_fans' => $maxFans,
             'min_fans' => $minFans,
-            'data' => $results
+            'data' => $results,
+            'original_data' => $points
         ];
     }
     
