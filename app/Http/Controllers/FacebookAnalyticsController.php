@@ -624,6 +624,59 @@ class FacebookAnalyticsController extends BaseController
         ]);
     }
 
+    /**
+    *  comparison 
+    *
+    * @return \Illuminate\Http\JsonResponse
+    *
+    * @SWG\Get(
+    *     path="/facebook-analytics/{profile_id}/comparison?last_days={last_days}",
+    *     description="facebook comparison",
+    *     operationId="comparisonFacebookPage",
+    *     produces={"application/json"},
+    *     tags={"facebook analytics"},
+    *     @SWG\Parameter(
+    *       name="profile_id",
+    *       in="path",
+    *       description="profile id",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Parameter(
+    *       name="last_days",
+    *       in="path",
+    *       description="Number of days ago",
+    *       required=true,
+    *       type="integer"
+    *     ),
+    *     @SWG\Response(
+    *         response=200,
+    *         description="Successful operation"
+    *     ),
+    *     @SWG\Response(
+    *         response=500,
+    *         description="Internal Error",
+    *     )
+    * )
+    */
+    public function comparisonFacebookPage($profile_id, Request $request)
+    {
+        $profileID = $profile_id;
+        $lastDays = isset($request->last_days) ? $request->last_days : 7;
+        $facebookID = $this->facebookProfileRepository->find($profileID)->facebook_id;
+        $fanLastDays = $this->influxDB->getTotalFansAtTime($facebookID, $lastDays);
+        $currentFans = $this->influxDB->getTotalFansAtTime($facebookID, 0);
+        return $this->response()->array([
+            'data' => [
+                'fans' => [
+                    'last_days' => $fanLastDays,
+                    'current' => $currentFans,
+                    'percent' => round(($currentFans - $fanLastDays) * 100 / $currentFans, 2)
+                ]
+            ],
+        ]);
+    }
+
      /**
      * influx db debugger
      * @uses Influx database
@@ -636,6 +689,4 @@ class FacebookAnalyticsController extends BaseController
             'data' => $this->facebookHelper->getPageFansGenderAge($facebookProfile->facebook_id, $facebookProfile->access_token)
         ]);
     }
-
-
 }

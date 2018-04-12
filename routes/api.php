@@ -40,6 +40,7 @@ $api->version('v1', function ($api) {
     $api->get('facebook-analytics/analytics/dashboard', 'App\Http\Controllers\FacebookAnalyticsController@analyticsFacebookDashBoard');
     $api->get('facebook-analytics/{profile_id}/insigths/fans-genders-age', 'App\Http\Controllers\FacebookAnalyticsController@analyticsFacebookPageInsightsFansGendersAge');
     $api->get('facebook-analytics/{profile_id}/insigths/best-time-publish', 'App\Http\Controllers\FacebookAnalyticsController@analyticsFacebookGetTheBestTimePublished');
+    $api->get('facebook-analytics/{profile_id}/comparison', 'App\Http\Controllers\FacebookAnalyticsController@comparisonFacebookPage');
     
     /**
      * instagram analytics
