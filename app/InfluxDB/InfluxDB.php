@@ -306,7 +306,7 @@ class InfluxDB {
     public function getGrowthOfTotalFollowers($profileID, $lastDays)
     {
          // executing a query will yield a resultset object
-        $query = "SELECT last(value) as value FROM instagram_account_followers WHERE account_id = '" . $profileID . "' and time > now() - " . $lastDays . "d  GROUP BY time(1d) FILL(0)";
+        $query = "SELECT last(value) as value FROM instagram_account_followers WHERE account_id = '" . $profileID . "' and time > now() - " . $lastDays . "d  GROUP BY time(1d) FILL(0) tz('Asia/Saigon')";
         $result = $this->database->query($query);
          // get the points from the resultset yields an array
         $points = $result->getPoints();
