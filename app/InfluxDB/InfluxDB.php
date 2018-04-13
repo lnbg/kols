@@ -72,7 +72,7 @@ class InfluxDB {
                 }
             }
             $growthValue = $currentPoint - $oldPoint;
-            if ($growthValue > $maxChangeFans) {
+            if (abs($growthValue) > abs($maxChangeFans)) {
                 $maxChangeFans = $growthValue;
             }
             $totalChangeFans += $growthValue;
@@ -335,7 +335,7 @@ class InfluxDB {
                 }
             }
             $growthValue = $currentPoint - $oldPoint;
-            if ($growthValue > $maxChangeFans) {
+            if (abs($growthValue) > abs($maxChangeFans)) {
                 $maxChangeFans = $growthValue;
             }
             $totalChangeFans += $growthValue;
