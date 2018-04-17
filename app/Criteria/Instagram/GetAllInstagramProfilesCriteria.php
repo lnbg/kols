@@ -22,13 +22,10 @@ class GetAllInstagramProfilesCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        $model = $model->leftJoin('instagram_media', 'instagram_accounts.id', 'instagram_media.account_id')
-        ->select(\DB::raw('instagram_accounts.id, instagram_accounts.instagram_id, instagram_accounts.name,
+        $model = $model->select(\DB::raw('instagram_accounts.id, instagram_accounts.instagram_id, instagram_accounts.name,
         instagram_accounts.username, instagram_accounts.media_count, instagram_accounts.followed_by_count, instagram_accounts.follow_count,
-        instagram_accounts.picture,
-        sum(instagram_media.like_count) AS sum_like_count, 
-        sum(instagram_media.comment_count) as sum_comment_count'))
-        ->groupBy('instagram_accounts.id');
+        instagram_accounts.picture, interaction_count, like_count as sum_like_count, comment_count as sum_comment_count'))
+        ->orderBy('like_count', 'desc');
         return $model;
     }
 }
