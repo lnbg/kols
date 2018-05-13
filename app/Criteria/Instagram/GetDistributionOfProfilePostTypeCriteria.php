@@ -34,7 +34,7 @@ class GetDistributionOfProfilePostTypeCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('account_id', $this->profileID)->select(\DB::raw('instagram_media.type, sum(id) as count'))
+        return $model->where('account_id', $this->profileID)->select(\DB::raw('instagram_media.type, count(id) as count'))
         ->groupBy('instagram_media.type');
     }
 }
